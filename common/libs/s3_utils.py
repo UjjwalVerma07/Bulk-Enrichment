@@ -1,5 +1,5 @@
 import boto3
-import os
+import os,json
 
 # Get S3 client
 def get_s3_client():
@@ -19,3 +19,16 @@ def download_file(bucket, key, local_path):
     s3 = get_s3_client()
     s3.download_file(bucket, key, local_path)
     print(f"Downloaded s3://{bucket}/{key} to {local_path}")
+
+
+def upload_progress_file(bucket_name,progress_name,progress_data):
+    s3=get_s3_client()
+    s3.put_object(Bucket=bucket_name,Key=progress_name,Body=progress_data)
+    
+    s3.put_object(
+        Bucket=bucket_name,
+        Key=f"{progress_name}.json",
+        Body=json.dumps(progress_data),
+        ContentType="application/json"
+    )
+    print(f"Uploaded progress file to s3://{bucket_name}/{progress_name}")
