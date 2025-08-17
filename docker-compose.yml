@@ -13,7 +13,10 @@ services:
 
   # Airflow Scheduler & Webserver
   airflow-webserver:
-    image: apache/airflow:2.9.2
+    # image: apache/airflow:2.9.2
+    build:
+      context: .
+      dockerfile: Dockerfile
     depends_on:
       - postgres
     environment:
@@ -27,6 +30,8 @@ services:
     volumes:
       - ./orchestrator/dags:/opt/airflow/dags/orchestrator
       - ./email_validation/dags:/opt/airflow/dags/email_validation
+      - ./email_validation/cpp:/opt/airflow/dags/email_validation/cpp
+      - ./email_validation/scripts:/opt/airflow/dags/email_validation/scripts
       - ./reverse_geocode/dags:/opt/airflow/dags/reverse_geocode
       - ./gender_enrichment/dags:/opt/airflow/dags/gender_enrichment
       - ./common/libs:/opt/airflow/common/libs
@@ -36,7 +41,10 @@ services:
     command: webserver
 
   airflow-scheduler:
-    image: apache/airflow:2.9.2
+    # image: apache/airflow:2.9.2
+    build:
+      context: .
+      dockerfile: Dockerfile
     depends_on:
       - postgres
     environment:
@@ -46,6 +54,8 @@ services:
     volumes:
       - ./orchestrator/dags:/opt/airflow/dags/orchestrator
       - ./email_validation/dags:/opt/airflow/dags/email_validation
+      - ./email_validation/cpp:/opt/airflow/dags/email_validation/cpp
+      - ./email_validation/scripts:/opt/airflow/dags/email_validation/scripts
       - ./reverse_geocode/dags:/opt/airflow/dags/reverse_geocode
       - ./gender_enrichment/dags:/opt/airflow/dags/gender_enrichment
       - ./common/libs:/opt/airflow/common/libs

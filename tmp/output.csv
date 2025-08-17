@@ -1,0 +1,4 @@
+id,name,email,address,gender,is_valid
+1,John Doe,john@example.com,New York,M,false
+2,Jane Smith,jane@example.com,San Francisco,F,false
+3,Alice Wonderland,alice@xyz.com,London,F,false

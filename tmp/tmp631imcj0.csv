@@ -1,0 +1,7 @@
+id,name,email,latitude,longitude,is_valid
+1,Amit,amit@example.com,28.6139,77.2090,false
+2,Neha,neha@example.com,19.0760,72.8777,false
+3,Ravi,ravi@example.com,12.9716,77.5946,false
+4,Divya,divya@example.com,13.0827,80.2707,false
+5,Sohan,sohan@example.com,22.5726,88.3639,false
+6,Kiran,kiran@example.com,28.7041,77.1025,false

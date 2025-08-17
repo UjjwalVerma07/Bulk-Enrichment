@@ -1,0 +1,63 @@
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+from airflow.operators.empty import EmptyOperator
+from common.libs import s3_utils,kafka_utils
+from datetime import datetime
+import subprocess
+import pandas as pd,os,tempfile,json
+BUCKET="test-bucket"
+INPUT_FILE="input/location_data.csv"
+OUTPUT_FILE="output/output.csv"
+
+def validate_emails():
+    #Step1:-Download the input file
+    local_input=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+    s3_utils.download_file(BUCKET,INPUT_FILE,local_input)
+
+
+    df=pd.read_csv(local_input)
+    #Fake Validation
+    #Here we have to write the validation for the c++ cli email Validation
+    #df["is_valid"]=True
+    
+    #Step2:- Create the output file path
+    local_output=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+    #df.to_csv(local_output,index=False)
+
+
+    #Step3:- Run the validation Script
+    try:
+        subprocess.run(
+            ["/opt/airflow/dags/email_validation/scripts/run_validator.sh", local_input, local_output],
+            check=True
+        )
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError(f"Validator script failed: {e}")
+    
+    #Step4:- Upload the output file backe to s3
+    s3_utils.upload_file(BUCKET,OUTPUT_FILE,local_output)
+
+    #Step4:- Send the Kafka Message and Update the Progress File
+    kafka_utils.send_event("pipeline-progress",{
+        "stage":"email_validation",
+        "status":"completed",
+        "time":datetime.now().isoformat()
+    })
+    s3_utils.upload_progress_file(BUCKET,"progress",{
+        "stage":"email_validation",
+        "status":"completed",
+        "time":datetime.now().isoformat()
+    })
+
+with DAG(
+    dag_id="email_validation_dag",
+    start_date=datetime(2025,1,1),
+    schedule_interval=None,
+    catchup=False,
+    tags=["enrichment"],
+)as dag:
+    task=PythonOperator(
+        task_id="validate_emails",
+        python_callable=validate_emails
+    )
+
