@@ -9,10 +9,13 @@ BUCKET="test-bucket"
 INPUT_FILE="input/location_data.csv"
 OUTPUT_FILE="output/output.csv"
 
-def validate_emails():
+def validate_emails(input_bucket,input_key,out_bucket,out_key):
     #Step1:-Download the input file
     local_input=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
-    s3_utils.download_file(BUCKET,INPUT_FILE,local_input)
+    # s3_utils.download_file(BUCKET,INPUT_FILE,local_input)
+
+
+    s3_utils.download_file(input_bucket,input_key,local_input)
 
 
     df=pd.read_csv(local_input)
@@ -35,7 +38,11 @@ def validate_emails():
         raise RuntimeError(f"Validator script failed: {e}")
     
     #Step4:- Upload the output file backe to s3
-    s3_utils.upload_file(BUCKET,OUTPUT_FILE,local_output)
+    # s3_utils.upload_file(BUCKET,OUTPUT_FILE,local_output)
+
+    #s3_utils.upload_file(BUCKET,"input/location_data.csv",local_output)
+    
+    s3_utils.upload_file(out_bucket,out_key,local_output)
 
     #Step4:- Send the Kafka Message and Update the Progress File
     kafka_utils.send_event("pipeline-progress",{
@@ -58,6 +65,12 @@ with DAG(
 )as dag:
     task=PythonOperator(
         task_id="validate_emails",
-        python_callable=validate_emails
+        python_callable=validate_emails,
+        op_kwargs={
+     "input_bucket":"{{dag_run.conf.get('input_bucket','raw')}}",
+     "input_key":"{{dag_run.conf.get('input_key','customer_raw.csv')}}",
+     "out_bucket":"{{dag_run.conf.get('out_bucket','staging')}}",
+     "out_key":"{{dag_run.conf.get('out_key','email_validated.csv')}}",
+        },
     )
 

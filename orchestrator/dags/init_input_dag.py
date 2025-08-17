@@ -52,9 +52,9 @@ import os
 
 from common.libs import s3_utils
 
-BUCKET_NAME = "test-bucket"
+BUCKET_NAME = "raw"
 LOCAL_INPUT = "/tmp/location_data.csv"
-S3_INPUT_KEY = "input/location_data.csv"
+S3_INPUT_KEY = "customer_raw.csv"
 
 LOCAL_GEO_MASTER = "/tmp/geo_master.csv"
 S3_GEO_KEY = "reference/geo_master.csv"

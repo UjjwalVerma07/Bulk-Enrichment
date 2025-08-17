@@ -46,31 +46,72 @@
 
 #     create_csv_task >> upload_task >> download_task
 
+# from datetime import datetime
+# from airflow import DAG
+# from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+# from airflow.operators.empty import EmptyOperator
+# from airflow.operators.python import PythonOperator
+# from common.libs import s3_utils,kafka_utils
+
+# def send_event(stage,status):
+#     kafka_utils.send_event("pipeline-progress",{"stage":stage,"status":status,"time":datetime.now().isoformat()})
+#     print(f"Event sent: stage={stage},status={status}")
+
+# def log_process(stage,status):
+#     progress_data={
+#         "stage":stage,
+#         "status":status,
+#         "time":datetime.now().isoformat()
+#     }
+#     s3_utils.upload_progress_file("test-bucket","progress",progress_data)
+
+# def log_email_validation_start():
+#     log_process("email_validation","started")
+
+# def log_email_validation_end():
+#     log_process("email_validation","completed")
+
+
+# with DAG(
+#     dag_id="orchestrator_dag",
+#     start_date=datetime(2025,1,1),
+#     schedule_interval=None,
+#     catchup=False,
+#     tags=["orchestrator"],
+# )as dag:
+#     start=EmptyOperator(task_id="start")
+
+#     log_start=PythonOperator(
+#         task_id="log_email_validation_start",
+#         python_callable=log_email_validation_start
+#     )
+
+#     trigger_email_validation=TriggerDagRunOperator(
+#         task_id="trigger_email_validation",
+#         trigger_dag_id="email_validation_dag",
+
+#     )
+    
+#     log_end=PythonOperator(
+#         task_id="log_email_validation_end",
+#         python_callable=log_email_validation_end
+#     )
+
+#     end=EmptyOperator(task_id="end")
+#     start >> trigger_email_validation >> end
+
+
+
 from datetime import datetime
 from airflow import DAG
-from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+import yaml
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
-from common.libs import s3_utils,kafka_utils
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
-def send_event(stage,status):
-    kafka_utils.send_event("pipeline-progress",{"stage":stage,"status":status,"time":datetime.now().isoformat()})
-    print(f"Event sent: stage={stage},status={status}")
-
-def log_process(stage,status):
-    progress_data={
-        "stage":stage,
-        "status":status,
-        "time":datetime.now().isoformat()
-    }
-    s3_utils.upload_progress_file("test-bucket","progress",progress_data)
-
-def log_email_validation_start():
-    log_process("email_validation","started")
-
-def log_email_validation_end():
-    log_process("email_validation","completed")
-
+def load_pipline_config():
+    with open("/opt/airflow/dags/config/pipeline.yml","r") as f:
+        return yaml.safe_load(f)
 
 with DAG(
     dag_id="orchestrator_dag",
@@ -78,29 +119,38 @@ with DAG(
     schedule_interval=None,
     catchup=False,
     tags=["orchestrator"],
-)as dag:
+) as dag:
     start=EmptyOperator(task_id="start")
-
-    log_start=PythonOperator(
-        task_id="log_email_validation_start",
-        python_callable=log_email_validation_start
-    )
-
-    trigger_email_validation=TriggerDagRunOperator(
-        task_id="trigger_email_validation",
-        trigger_dag_id="email_validation_dag",
-
-    )
-    
-    log_end=PythonOperator(
-        task_id="log_email_validation_end",
-        python_callable=log_email_validation_end
-    )
-
     end=EmptyOperator(task_id="end")
-    start >> trigger_email_validation >> end
 
+    config=load_pipline_config()
+    sequence=config["sequence"]
 
+    input_bucket=config["input_bucket"]
+    input_key=config["input_key"]
 
+    prev_task=start
 
+    for step in sequence:
+        dag_id=step.get("dag_id") + "_dag"
+        out_bucket=step.get("out_bucket")
+        out_key=step.get("out_key")
+
+        trigger=TriggerDagRunOperator(
+            task_id=f"trigger_{step.get('dag_id')}",
+            trigger_dag_id=dag_id,
+            conf={
+                "input_bucket": input_bucket,
+                "input_key": input_key,
+                "output_bucket": out_bucket,
+                "output_key": out_key
+            },
+            wait_for_completion=True
+        )
+        prev_task >> trigger
+        prev_task=trigger
+
+        input_bucket=out_bucket
+        input_key=out_key
+    prev_task >> end
 

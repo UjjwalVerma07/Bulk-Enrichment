@@ -29,6 +29,7 @@ services:
       PYTHONPATH: /opt/airflow
     volumes:
       - ./orchestrator/dags:/opt/airflow/dags/orchestrator
+      - ./orchestrator/config:/opt/airflow/dags/config
       - ./email_validation/dags:/opt/airflow/dags/email_validation
       - ./email_validation/cpp:/opt/airflow/dags/email_validation/cpp
       - ./email_validation/scripts:/opt/airflow/dags/email_validation/scripts
@@ -53,6 +54,7 @@ services:
       PYTHONPATH: /opt/airflow
     volumes:
       - ./orchestrator/dags:/opt/airflow/dags/orchestrator
+      - ./orchestrator/config:/opt/airflow/dags/config
       - ./email_validation/dags:/opt/airflow/dags/email_validation
       - ./email_validation/cpp:/opt/airflow/dags/email_validation/cpp
       - ./email_validation/scripts:/opt/airflow/dags/email_validation/scripts

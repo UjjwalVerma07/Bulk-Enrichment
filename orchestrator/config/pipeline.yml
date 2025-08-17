@@ -1,0 +1,15 @@
+input_bucket: raw
+input_key: customer_raw.csv
+
+sequence:
+  - dag_id: email_validation
+    out_bucket: staging
+    out_key: email_validated.csv
+
+  - dag_id: reverse_geocode
+    out_bucket: staging
+    out_key: geo_enriched.csv
+
+  - dag_id: gender_enrichment
+    out_bucket: enriched
+    out_key: final_enriched.csv
