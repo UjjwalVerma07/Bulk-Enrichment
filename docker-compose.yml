@@ -40,7 +40,9 @@ services:
       - ./common/libs:/opt/airflow/common/libs
       - ./samples/input:/samples/input
       - ./samples/output:/samples/output
-      - ./tmp:/tmp
+      - ./gender_enrichment/data:/gender_enrichment/data
+      - ./reverse_geocode/data:/reverse_geocode/data
+      # - ./tmp:/tmp
     ports:
       - "8080:8080"
     command: webserver
@@ -68,7 +70,9 @@ services:
       - ./common/libs:/opt/airflow/common/libs
       - ./samples/input:/samples/input
       - ./samples/output:/samples/output
-      - ./tmp:/tmp
+      - ./gender_enrichment/data:/gender_enrichment/data
+      - ./reverse_geocode/data:/reverse_geocode/data
+      # - ./tmp:/tmp
     command: scheduler
 
   # MinIO (S3-compatible storage)

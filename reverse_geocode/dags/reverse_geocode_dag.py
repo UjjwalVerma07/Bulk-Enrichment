@@ -40,7 +40,8 @@ def run_reverse_geocode(input_bucket,input_key,out_bucket,out_key):
 
     #Step 2-Download the geo_master file from S3
 
-        local_geo_master=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+        # local_geo_master=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+        local_geo_master="/reverse_geocode/data/geo_master.csv"
         s3_utils.download_file(BUCKET,GEO_MASTER_CSV,local_geo_master)
 
     #Step 3 - Read both the files

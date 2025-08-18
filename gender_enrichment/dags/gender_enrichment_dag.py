@@ -35,7 +35,8 @@ def enrich_gender(input_bucket,input_key,out_bucket,out_key):
     # s3_utils.download_file(BUCKET,OUTPUT_FILE,local_input)
 
     #Step2-download the gender reference file
-        local_gender_master=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+        # local_gender_master=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+        local_gender_master="/gender_enrichment/data/gender_master.csv"
         s3_utils.download_file(BUCKET,GENDER_MASTER_CSV,local_gender_master)
 
     #Step3 - Read both the files
