@@ -50,30 +50,7 @@ string trim(const string &s) {
     if(start == string::npos || end == string::npos) return "";
     return s.substr(start, end - start + 1);
 }
-
-
-// bool isvalid(const string &email){
-//     if(email.empty()) return false;
-//     if(!isChar(email[0])) return false;
-
-//     int atPos = email.find('@');
-//     int dotPos = email.rfind('.'); // last dot in the string
-
-//     if(atPos == string::npos || dotPos == string::npos) return false;
-//     if(atPos > dotPos) return false; // @ must be before dot
-//     if(atPos == 0 || dotPos == email.length()-1) return false; // nothing before @ or after dot
-//     if(dotPos - atPos < 2) return false; // at least one char between @ and .
-
-//     return true;
-// }
 int main(int argc,char*argv[]){
-    // string email="ujjwalvarma6948@gmail.com";
-    // if(isvalid(email)){
-    //     cout<<"Valid Email";
-    // }
-    // else{
-    //     cout<<"Invalid Email";
-    // }
     if(argc!=3){
         cerr<<"Usage: validator <input_csv> output_csv>";
         return 1;

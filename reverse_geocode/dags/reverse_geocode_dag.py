@@ -6,23 +6,17 @@ from datetime import datetime
 import subprocess
 import pandas as pd,os,tempfile,json
 
-# BUCKET="test-bucket"
-# INPUT_FILE="input/input.csv"
-# OUTPUT_FILE="output.csv"
-# GEO_MASTER_CSV="reference/geo_master.csv"
 BUCKET = "raw"
-INPUT_FILE = "input/location_data.csv"   # matches upload
-OUTPUT_FILE = "output/output.csv"        # (better to keep it under output/)
-GEO_MASTER_CSV = "reference/geo_master.csv"
-
+LOCAL_INPUT="/samples/input/reverse_geocode.csv"
+LOCAL_OUTPUT="/samples/output/reverse_geocode_enriched.csv"
+LOCAL_GEO_MASTER_CSV="/reverse_geocode/data/geo_master.csv"
+GEO_MASTER_CSV="/reference/geo_master.csv"
 DEFAULT_INPUT_BUCKET="raw"
 DEFAULT_INPUT_KEY="customer_raw.csv"
 DEFAULT_OUT_BUCKET="enriched"
 DEFAULT_OUT_KEY="reverse_geocode_enriched.csv"
 
 def run_reverse_geocode(input_bucket,input_key,out_bucket,out_key):
-
-    #started event
     kafka_utils.send_event("pipeline-progress",{
         "stage":"reverse_geocode",
         "status":"Started",
@@ -36,17 +30,10 @@ def run_reverse_geocode(input_bucket,input_key,out_bucket,out_key):
     
     try:
     #Step 1-Download the input file 
-        # local_input=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
-        local_input="/samples/input/reverse_geocode.csv"
-    # s3_utils.download_file(BUCKET,INPUT_FILE,local_input)
+        local_input=LOCAL_INPUT
         s3_utils.download_file(input_bucket,input_key,local_input)
-    #For Pipelinging Purpose (kind of working)
-    # s3_utils.download_file(BUCKET,OUTPUT_FILE,local_input)
-
     #Step 2-Download the geo_master file from S3
-
-        # local_geo_master=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
-        local_geo_master="/reverse_geocode/data/geo_master.csv"
+        local_geo_master=LOCAL_GEO_MASTER_CSV
         s3_utils.download_file(BUCKET,GEO_MASTER_CSV,local_geo_master)
 
     #Step 3 - Read both the files
@@ -57,16 +44,8 @@ def run_reverse_geocode(input_bucket,input_key,out_bucket,out_key):
     #Merge on latitude and longitute
         merged_df=pd.merge(df,geo_master_df,how="left",on=["latitude","longitude"])
         merged_df.fillna({"city":"Unknown"},inplace=True)
-
-    #city column comes from geo_master_df
-        # local_output=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
-        local_output="/samples/output/geo_enriched.csv"
+        local_output=LOCAL_OUTPUT
         merged_df.to_csv(local_output,index=False)
-
-
-    #Upload the enriched file back to S3
-    # s3_utils.upload_file(BUCKET,OUTPUT_FILE,local_output)
-    # s3_utils.upload_file(BUCKET,"input/location_data.csv",local_output)
         s3_utils.upload_file(out_bucket,out_key,local_output)
 
     #send the messsage via kakfa util

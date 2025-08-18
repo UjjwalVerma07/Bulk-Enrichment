@@ -28,7 +28,7 @@ services:
       AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'false'
       AIRFLOW__WEBSERVER__SECRET_KEY: 'my_shared_secret_key'
       PYTHONPATH: /opt/airflow
-      
+
     volumes:
       - ./orchestrator/dags:/opt/airflow/dags/orchestrator
       - ./orchestrator/config:/opt/airflow/dags/config

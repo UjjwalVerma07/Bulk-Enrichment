@@ -7,18 +7,17 @@ import subprocess
 import pandas as pd,os,tempfile,json
 
 BUCKET="raw"
-INPUT_FILE="input/location_data.csv"
-OUTPUT_FILE="output/output.csv"
-GENDER_MASTER_CSV="reference/gender_master.csv"
-
-
+LOCAL_INPUT="/samples/input/gender_enrichment.csv"
+LOCAL_OUTPUT="/samples/output/final_enriched.csv"
+LOCAL_GENDER_MASTER_CSV="/gender_enrichment/data/gender_master.csv"
+GENDER_MASTER_CSV="/reference/gender_master.csv"
 DEFAULT_INPUT_BUCKET="raw"
 DEFAULT_INPUT_KEY="customer_raw.csv"
 DEFAULT_OUT_BUCKET="enriched"
 DEFAULT_OUT_KEY="gender_enriched.csv"
 
 def enrich_gender(input_bucket,input_key,out_bucket,out_key):
-    #Started Event
+    
     kafka_utils.send_event("pipeline-progress",{
         "stage":"gender_enrichment",
         "status":"Started",
@@ -33,19 +32,10 @@ def enrich_gender(input_bucket,input_key,out_bucket,out_key):
 
     try:
     #Step1 - download the inputfile
-        # local_input=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
-        local_input="/samples/input/gender_enrichment.csv"
-    # s3_utils.download_file(BUCKET,INPUT_FILE,local_input)
+        local_input=LOCAL_INPUT
         s3_utils.download_file(input_bucket,input_key,local_input)
-   #FOR PIPELINIGN PURPOSE. (kind of working)
-    # s3_utils.download_file(BUCKET,OUTPUT_FILE,local_input)
-
-    #Step2-download the gender reference file
-        # local_gender_master=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
-        local_gender_master="/gender_enrichment/data/gender_master.csv"
+        local_gender_master=LOCAL_GENDER_MASTER_CSV
         s3_utils.download_file(BUCKET,GENDER_MASTER_CSV,local_gender_master)
-
-    #Step3 - Read both the files
         df=pd.read_csv(local_input)
         gender_master_df=pd.read_csv(local_gender_master)
 
@@ -54,17 +44,11 @@ def enrich_gender(input_bucket,input_key,out_bucket,out_key):
         merged_df.fillna({"gender":"UNKNOWN"},inplace=True) #handle the unknow gender
 
     #Step5-Save the output file
-        # local_output=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
-        local_output="/samples/output/final_enriched.csv"
+        local_output=LOCAL_OUTPUT
         merged_df.to_csv(local_output,index=False)
 
     #Step6-Upload the output file
-    # s3_utils.upload_file(BUCKET,OUTPUT_FILE,local_output)
         s3_utils.upload_file(out_bucket,out_key,local_output)
-    # s3_utils.upload_file(BUCKET,"input/location_data.csv",local_output)
-
-
-
     #Step7- Send Message to kafka and update the progress file
 
         kafka_utils.send_event("pipeline-progress",{

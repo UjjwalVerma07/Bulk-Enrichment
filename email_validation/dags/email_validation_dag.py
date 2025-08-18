@@ -7,16 +7,14 @@ import subprocess
 import pandas as pd,os,tempfile,json
 
 BUCKET="raw"
-INPUT_FILE="input/location_data.csv"
-OUTPUT_FILE="output/output.csv"
-
+LOCAL_INPUT="/samples/input/customer_raw.csv"
+LOCAL_OUTPUT="/samples/output/email_validated.csv"
 DEFAULT_INPUT_BUCKET="raw"
 DEFAULT_INPUT_KEY="customer_raw.csv"
 DEFAULT_OUT_BUCKET="enriched"
 DEFAULT_OUT_KEY="email_validated.csv"
 
 def validate_emails(input_bucket,input_key,out_bucket,out_key):
-    #Started event-----------------
     kafka_utils.send_event("pipeline-progress",{
         "stage":"email_validation",
         "status":"Started",
@@ -29,24 +27,11 @@ def validate_emails(input_bucket,input_key,out_bucket,out_key):
     })
     
     try:
-    #Step1:-Download the input file
-        # local_input=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
-        local_input="/samples/input/customer_raw.csv"
-    # s3_utils.download_file(BUCKET,INPUT_FILE,local_input)
 
-
+        local_input=LOCAL_INPUT
         s3_utils.download_file(input_bucket,input_key,local_input)
-
-
         df=pd.read_csv(local_input)
-    #Fake Validation
-    #Here we have to write the validation for the c++ cli email Validation
-    #df["is_valid"]=True
-    
-    #Step2:- Create the output file path
-        # local_output=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
-        local_output="/samples/output/email_validated.csv"
-    #df.to_csv(local_output,index=False)
+        local_output=LOCAL_OUTPUT
 
 
     #Step3:- Run the validation Script
@@ -58,15 +43,8 @@ def validate_emails(input_bucket,input_key,out_bucket,out_key):
         except subprocess.CalledProcessError as e:
             raise RuntimeError(f"Validator script failed: {e}")
     
-    #Step4:- Upload the output file backe to s3
-    # s3_utils.upload_file(BUCKET,OUTPUT_FILE,local_output)
-
-    #s3_utils.upload_file(BUCKET,"input/location_data.csv",local_output)
-    
+    #Step4:- Upload the output file backe to s3    
         s3_utils.upload_file(out_bucket,out_key,local_output)
-
-    #Step4:- Send the Kafka Message and Update the Progress File
-     #Succeed event
         kafka_utils.send_event("pipeline-progress",{
             "stage":"email_validation",
             "status":"Succeeded",
@@ -78,7 +56,6 @@ def validate_emails(input_bucket,input_key,out_bucket,out_key):
             "time":datetime.now().isoformat()
         })
     except Exception as e:
-        #Failed Case handle;
         kafka_utils.send_event("pipeline-progress",{
             "stage":"email_validation",
             "status":"Failed",
@@ -106,6 +83,5 @@ with DAG(
      "out_bucket":"{{dag_run.conf.get('out_bucket','"+ DEFAULT_OUT_BUCKET+"')}}",
      "out_key":"{{dag_run.conf.get('out_key','"+ DEFAULT_OUT_KEY+"')}}",
         },
-        # provide_context=True,
     )
 

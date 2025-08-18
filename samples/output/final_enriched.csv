@@ -1,7 +1,7 @@
-id,name,email,latitude,longitude,gender
-1,Amit,amit@example.com,28.6139,77.209,M
-2,Neha,neha@example.com,19.076,72.8777,F
-3,Ravi,ravi@example.com,12.9716,77.5946,M
-4,Divya,divya@example.com.,13.0827,80.2707,F
-5,Sohan,sohan@example.com,22.5726,88.3639,M
-6,Kiran,kiran@example.com,28.7041,77.1025,F
+id,name,email,latitude,longitude,email_valid,city,gender
+1,Amit,amit@example.com,28.6139,77.209,True,New Delhi,M
+2,Neha,neha@example.com,19.076,72.8777,True,Mumbai,F
+3,Ravi,ravi@example.com,12.9716,77.5946,True,Bangalore,M
+4,Divya,divya@example.com.,13.0827,80.2707,False,Chennai,F
+5,Sohan,sohan@example.com,22.5726,88.3639,True,Kolkata,M
+6,Kiran,kiran@example.com,28.7041,77.1025,True,Unknown,F
