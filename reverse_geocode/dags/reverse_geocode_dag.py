@@ -1,7 +1,7 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.empty import EmptyOperator
-from common.libs import s3_utils,kafka_utils
+from common.libs import s3_utils,kafka_utils,progress
 from datetime import datetime
 import subprocess
 import pandas as pd,os,tempfile,json
@@ -10,7 +10,7 @@ import pandas as pd,os,tempfile,json
 # INPUT_FILE="input/input.csv"
 # OUTPUT_FILE="output.csv"
 # GEO_MASTER_CSV="reference/geo_master.csv"
-BUCKET = "test-bucket"
+BUCKET = "raw"
 INPUT_FILE = "input/location_data.csv"   # matches upload
 OUTPUT_FILE = "output/output.csv"        # (better to keep it under output/)
 GEO_MASTER_CSV = "reference/geo_master.csv"
@@ -23,6 +23,12 @@ def run_reverse_geocode(input_bucket,input_key,out_bucket,out_key):
         "status":"Started",
         "time":datetime.now().isoformat()
     })
+    progress.upload_progress_file(BUCKET,"progress",{
+        "stage":"reverse_geocode",
+        "status":"Started",
+        "time":datetime.now().isoformat()
+    })
+    
     try:
     #Step 1-Download the input file 
         local_input=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
@@ -65,7 +71,7 @@ def run_reverse_geocode(input_bucket,input_key,out_bucket,out_key):
 
     #Upload progress.json file to S3
 
-        s3_utils.upload_progress_file(BUCKET,"progress",{
+        progress.upload_progress_file(BUCKET,"progress",{
             "stage":"reverse_geocode",
             "status":"Succeeded",
             "time":datetime.now().isoformat()
@@ -77,7 +83,7 @@ def run_reverse_geocode(input_bucket,input_key,out_bucket,out_key):
             "time":datetime.now().isoformat()
         })
 
-        s3_utils.upload_progress_file(BUCKET,"progress",{
+        progress.upload_progress_file(BUCKET,"progress",{
             "stage":"reverse_geocode",
             "status":"Failed",
             "time":datetime.now().isoformat()

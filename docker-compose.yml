@@ -26,7 +26,9 @@ services:
       AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
       AIRFLOW__WEBSERVER__RBAC: 'true'
       AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'false'
+      AIRFLOW__WEBSERVER__SECRET_KEY: 'my_shared_secret_key'
       PYTHONPATH: /opt/airflow
+      
     volumes:
       - ./orchestrator/dags:/opt/airflow/dags/orchestrator
       - ./orchestrator/config:/opt/airflow/dags/config
@@ -51,6 +53,7 @@ services:
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      AIRFLOW__WEBSERVER__SECRET_KEY: 'my_shared_secret_key'
       PYTHONPATH: /opt/airflow
     volumes:
       - ./orchestrator/dags:/opt/airflow/dags/orchestrator

@@ -1,11 +1,12 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.empty import EmptyOperator
-from common.libs import s3_utils,kafka_utils
+from common.libs import s3_utils,kafka_utils,progress
 from datetime import datetime
 import subprocess
 import pandas as pd,os,tempfile,json
-BUCKET="test-bucket"
+
+BUCKET="raw"
 INPUT_FILE="input/location_data.csv"
 OUTPUT_FILE="output/output.csv"
 
@@ -15,6 +16,11 @@ def validate_emails(input_bucket,input_key,out_bucket,out_key):
         "stage":"email_validation",
         "status":"Started",
         "time":datetime.now().isoformat(),
+    })
+    progress.upload_progress_file(BUCKET,"progress",{
+        "stage":"email_validation",
+        "status":"Started",
+        "time":datetime.now().isoformat()
     })
     
     try:
@@ -59,7 +65,7 @@ def validate_emails(input_bucket,input_key,out_bucket,out_key):
             "status":"Succeeded",
             "time":datetime.now().isoformat()
         })
-        s3_utils.upload_progress_file(BUCKET,"progress",{
+        progress.upload_progress_file(BUCKET,"progress",{
             "stage":"email_validation",
             "status":"Succeeded",
             "time":datetime.now().isoformat()
@@ -71,7 +77,7 @@ def validate_emails(input_bucket,input_key,out_bucket,out_key):
             "status":"Failed",
             "time":datetime.now().isoformat()
         })
-        s3_utils.upload_progress_file(BUCKET,"progress",{
+        progress.upload_progress_file(BUCKET,"progress",{
             "stage":"email_validation",
             "status":"Failed",
             "time":datetime.now().isoformat()

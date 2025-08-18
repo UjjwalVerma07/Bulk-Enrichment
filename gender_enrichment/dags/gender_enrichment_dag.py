@@ -1,12 +1,12 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.empty import EmptyOperator
-from common.libs import s3_utils,kafka_utils
+from common.libs import s3_utils,kafka_utils,progress
 from datetime import datetime
 import subprocess
 import pandas as pd,os,tempfile,json
 
-BUCKET="test-bucket"
+BUCKET="raw"
 INPUT_FILE="input/location_data.csv"
 OUTPUT_FILE="output/output.csv"
 GENDER_MASTER_CSV="reference/gender_master.csv"
@@ -14,6 +14,11 @@ GENDER_MASTER_CSV="reference/gender_master.csv"
 def enrich_gender(input_bucket,input_key,out_bucket,out_key):
     #Started Event
     kafka_utils.send_event("pipeline-progress",{
+        "stage":"gender_enrichment",
+        "status":"Started",
+        "time":datetime.now().isoformat()
+    })
+    progress.upload_progress_file(BUCKET,"progress",{
         "stage":"gender_enrichment",
         "status":"Started",
         "time":datetime.now().isoformat()
@@ -59,7 +64,7 @@ def enrich_gender(input_bucket,input_key,out_bucket,out_key):
             "date":datetime.now().isoformat()
             })
 
-        s3_utils.upload_progress_file(BUCKET,"progress",{
+        progress.upload_progress_file(BUCKET,"progress",{
             "stage":"gender_enrichment",
             "status":"Succeeded",
             "date":datetime.now().isoformat()
@@ -70,7 +75,7 @@ def enrich_gender(input_bucket,input_key,out_bucket,out_key):
             "status":"Failed",
             "date":datetime.now().isoformat()
         })
-        s3_utils.upload_progress_file(BUCKET,"progress",{
+        progress.upload_progress_file(BUCKET,"progress",{
             "stage":"gender_enrichment",
             "status":"Failed",
             "date":datetime.now().isoformat()
