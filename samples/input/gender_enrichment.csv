@@ -1,7 +1,7 @@
-id,name,email,latitude,longitude,email_valid,city
-1,Amit,amit@example.com,28.6139,77.209,True,New Delhi
-2,Neha,neha@example.com,19.076,72.8777,True,Mumbai
-3,Ravi,ravi@example.com,12.9716,77.5946,True,Bangalore
-4,Divya,divya@example.com.,13.0827,80.2707,False,Chennai
-5,Sohan,sohan@example.com,22.5726,88.3639,True,Kolkata
-6,Kiran,kiran@example.com,28.7041,77.1025,True,Unknown
+id,name,email,latitude,longitude
+1,Amit,amit@example.com,28.6139,77.2090
+2,Neha,neha@example.com,19.0760,72.8777
+3,Ravi,ravi@example.com,12.9716,77.5946
+4,Divya,divya@example.com.,13.0827,80.2707
+5,Sohan,sohan@example.com,22.5726,88.3639
+6,Kiran,kiran@example.com,28.7041,77.1025
