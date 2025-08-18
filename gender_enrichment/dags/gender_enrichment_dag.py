@@ -11,6 +11,12 @@ INPUT_FILE="input/location_data.csv"
 OUTPUT_FILE="output/output.csv"
 GENDER_MASTER_CSV="reference/gender_master.csv"
 
+
+DEFAULT_INPUT_BUCKET="raw"
+DEFAULT_INPUT_KEY="customer_raw.csv"
+DEFAULT_OUT_BUCKET="enriched"
+DEFAULT_OUT_KEY="gender_enriched.csv"
+
 def enrich_gender(input_bucket,input_key,out_bucket,out_key):
     #Started Event
     kafka_utils.send_event("pipeline-progress",{
@@ -96,10 +102,10 @@ with DAG(
         task_id="gender_enrichment_task",
         python_callable=enrich_gender,
         op_kwargs={
-            "input_bucket":"{{dag_run.conf.get('input_bucket','staging')}}",
-            "input_key":"{{dag_run.conf.get('input_key','geo_enriched.csv')}}",
-            "out_bucket":"{{dag_run.conf.get('out_bucket','enriched')}}",
-            "out_key":"{{dag_run.conf.get('out_key','final_enriched.csv')}}",
+            "input_bucket":"{{dag_run.conf.get('input_bucket','"+ DEFAULT_INPUT_BUCKET+"')}}",
+            "input_key":"{{dag_run.conf.get('input_key','"+ DEFAULT_INPUT_KEY+"')}}",
+            "out_bucket":"{{dag_run.conf.get('out_bucket','"+ DEFAULT_OUT_BUCKET+"')}}",
+            "out_key":"{{dag_run.conf.get('out_key','"+ DEFAULT_OUT_KEY+"')}}",
         },
     )
 

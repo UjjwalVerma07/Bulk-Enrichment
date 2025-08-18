@@ -1,4 +1,4 @@
-id,name,email,latitude,longitude,is_valid
+id,name,email,latitude,longitude,email_valid
 1,Amit,amit@example.com,28.6139,77.2090,True
 2,Neha,neha@example.com,19.0760,72.8777,True
 3,Ravi,ravi@example.com,12.9716,77.5946,True

@@ -10,6 +10,11 @@ BUCKET="raw"
 INPUT_FILE="input/location_data.csv"
 OUTPUT_FILE="output/output.csv"
 
+DEFAULT_INPUT_BUCKET="raw"
+DEFAULT_INPUT_KEY="customer_raw.csv"
+DEFAULT_OUT_BUCKET="enriched"
+DEFAULT_OUT_KEY="email_validated.csv"
+
 def validate_emails(input_bucket,input_key,out_bucket,out_key):
     #Started event-----------------
     kafka_utils.send_event("pipeline-progress",{
@@ -96,10 +101,10 @@ with DAG(
         task_id="validate_emails",
         python_callable=validate_emails,
         op_kwargs={
-     "input_bucket":"{{dag_run.conf.get('input_bucket','raw')}}",
-     "input_key":"{{dag_run.conf.get('input_key','customer_raw.csv')}}",
-     "out_bucket":"{{dag_run.conf.get('out_bucket','staging')}}",
-     "out_key":"{{dag_run.conf.get('out_key','email_validated.csv')}}",
+     "input_bucket":"{{dag_run.conf.get('input_bucket','"+ DEFAULT_INPUT_BUCKET+"')}}",
+     "input_key":"{{dag_run.conf.get('input_key','"+ DEFAULT_INPUT_KEY+"')}}",
+     "out_bucket":"{{dag_run.conf.get('out_bucket','"+ DEFAULT_OUT_BUCKET+"')}}",
+     "out_key":"{{dag_run.conf.get('out_key','"+ DEFAULT_OUT_KEY+"')}}",
         },
         # provide_context=True,
     )

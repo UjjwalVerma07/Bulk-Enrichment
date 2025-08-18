@@ -15,35 +15,35 @@ bool isDigit(char c){
     return false;
 }
 
-// bool isvalid(string email){
-//     //Check if first character is alphabet or not
-//     if(email.length()==0){
-//         return false;
-//     }
-//     if(!isChar(email[0])){
-//         return false;
-//     }
-//     int at=-1;
-//     int dot=-1;
-//     for(int i=0;i<email.length();i++){
-//         if(email[i]=='@'){
-//             at=i;
-//         }
-//         else if(email[i]=='.'){
-//             dot=i;
-//         }
-//     }
-//     if(at==-1 or dot==-1){
-//         return false;
-//     }
-//      if(at>dot){
-//         return false;
-//     }
-//     if(dot>=email.length()-1){
-//         return false;
-//     }
-//     return true;
-// }
+bool isvalid(string email){
+    //Check if first character is alphabet or not
+    if(email.length()==0){
+        return false;
+    }
+    if(!isChar(email[0])){
+        return false;
+    }
+    int at=-1;
+    int dot=-1;
+    for(int i=0;i<email.length();i++){
+        if(email[i]=='@'){
+            at=i;
+        }
+        else if(email[i]=='.'){
+            dot=i;
+        }
+    }
+    if(at==-1 or dot==-1){
+        return false;
+    }
+     if(at>dot){
+        return false;
+    }
+    if(dot>=email.length()-1){
+        return false;
+    }
+    return true;
+}
 string trim(const string &s) {
     size_t start = s.find_first_not_of(" \t\r\n");
     size_t end = s.find_last_not_of(" \t\r\n");
@@ -52,20 +52,20 @@ string trim(const string &s) {
 }
 
 
-bool isvalid(const string &email){
-    if(email.empty()) return false;
-    if(!isChar(email[0])) return false;
+// bool isvalid(const string &email){
+//     if(email.empty()) return false;
+//     if(!isChar(email[0])) return false;
 
-    int atPos = email.find('@');
-    int dotPos = email.rfind('.'); // last dot in the string
+//     int atPos = email.find('@');
+//     int dotPos = email.rfind('.'); // last dot in the string
 
-    if(atPos == string::npos || dotPos == string::npos) return false;
-    if(atPos > dotPos) return false; // @ must be before dot
-    if(atPos == 0 || dotPos == email.length()-1) return false; // nothing before @ or after dot
-    if(dotPos - atPos < 2) return false; // at least one char between @ and .
+//     if(atPos == string::npos || dotPos == string::npos) return false;
+//     if(atPos > dotPos) return false; // @ must be before dot
+//     if(atPos == 0 || dotPos == email.length()-1) return false; // nothing before @ or after dot
+//     if(dotPos - atPos < 2) return false; // at least one char between @ and .
 
-    return true;
-}
+//     return true;
+// }
 int main(int argc,char*argv[]){
     // string email="ujjwalvarma6948@gmail.com";
     // if(isvalid(email)){
@@ -104,7 +104,7 @@ int main(int argc,char*argv[]){
             row.push_back(cell);
         }
         if(!headerProcessed){
-            output<<line<<",is_valid\n";
+            output<<line<<",email_valid\n";
             headerProcessed=true;
         }else{
             string email=row.size()>2 ? row[2]:"";

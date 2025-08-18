@@ -15,6 +15,11 @@ INPUT_FILE = "input/location_data.csv"   # matches upload
 OUTPUT_FILE = "output/output.csv"        # (better to keep it under output/)
 GEO_MASTER_CSV = "reference/geo_master.csv"
 
+DEFAULT_INPUT_BUCKET="raw"
+DEFAULT_INPUT_KEY="customer_raw.csv"
+DEFAULT_OUT_BUCKET="enriched"
+DEFAULT_OUT_KEY="reverse_geocode_enriched.csv"
+
 def run_reverse_geocode(input_bucket,input_key,out_bucket,out_key):
 
     #started event
@@ -104,10 +109,10 @@ with DAG(
         task_id="reverse_geocode_task",
         python_callable=run_reverse_geocode,
         op_kwargs={
-            "input_bucket":"{{dag_run.conf.get('input_bucket','staging')}}",
-            "input_key":"{{dag_run.conf.get('input_key','email_validated.csv')}}",
-            "out_bucket":"{{dag_run.conf.get('out_bucket','staging')}}",
-            "out_key":"{{dag_run.conf.get('out_key','geo_enriched.csv')}}",
+            "input_bucket":"{{dag_run.conf.get('input_bucket','"+ DEFAULT_INPUT_BUCKET+"')}}",
+            "input_key":"{{dag_run.conf.get('input_key','"+ DEFAULT_INPUT_KEY+"')}}",
+            "out_bucket":"{{dag_run.conf.get('out_bucket','"+ DEFAULT_OUT_BUCKET+"')}}",
+            "out_key":"{{dag_run.conf.get('out_key','"+ DEFAULT_OUT_KEY+"')}}",
         },
     )
 
