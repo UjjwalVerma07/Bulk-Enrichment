@@ -25,7 +25,8 @@ def validate_emails(input_bucket,input_key,out_bucket,out_key):
     
     try:
     #Step1:-Download the input file
-        local_input=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+        # local_input=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+        local_input="/samples/input/customer_raw.csv"
     # s3_utils.download_file(BUCKET,INPUT_FILE,local_input)
 
 
@@ -38,7 +39,8 @@ def validate_emails(input_bucket,input_key,out_bucket,out_key):
     #df["is_valid"]=True
     
     #Step2:- Create the output file path
-        local_output=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+        # local_output=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+        local_output="/samples/output/email_validated.csv"
     #df.to_csv(local_output,index=False)
 
 

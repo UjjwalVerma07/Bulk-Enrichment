@@ -1,4 +1,4 @@
-version: '3.8'
+# version: '3.8'
 
 services:
   # Airflow Metadata Database
@@ -38,6 +38,8 @@ services:
       - ./reverse_geocode/dags:/opt/airflow/dags/reverse_geocode
       - ./gender_enrichment/dags:/opt/airflow/dags/gender_enrichment
       - ./common/libs:/opt/airflow/common/libs
+      - ./samples/input:/samples/input
+      - ./samples/output:/samples/output
       - ./tmp:/tmp
     ports:
       - "8080:8080"
@@ -64,6 +66,8 @@ services:
       - ./reverse_geocode/dags:/opt/airflow/dags/reverse_geocode
       - ./gender_enrichment/dags:/opt/airflow/dags/gender_enrichment
       - ./common/libs:/opt/airflow/common/libs
+      - ./samples/input:/samples/input
+      - ./samples/output:/samples/output
       - ./tmp:/tmp
     command: scheduler
 

@@ -31,7 +31,8 @@ def run_reverse_geocode(input_bucket,input_key,out_bucket,out_key):
     
     try:
     #Step 1-Download the input file 
-        local_input=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+        # local_input=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+        local_input="/samples/input/reverse_geocode.csv"
     # s3_utils.download_file(BUCKET,INPUT_FILE,local_input)
         s3_utils.download_file(input_bucket,input_key,local_input)
     #For Pipelinging Purpose (kind of working)
@@ -52,7 +53,8 @@ def run_reverse_geocode(input_bucket,input_key,out_bucket,out_key):
         merged_df.fillna({"city":"Unknown"},inplace=True)
 
     #city column comes from geo_master_df
-        local_output=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+        # local_output=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+        local_output="/samples/output/geo_enriched.csv"
         merged_df.to_csv(local_output,index=False)
 
 

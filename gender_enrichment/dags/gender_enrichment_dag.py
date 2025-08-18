@@ -27,7 +27,8 @@ def enrich_gender(input_bucket,input_key,out_bucket,out_key):
 
     try:
     #Step1 - download the inputfile
-        local_input=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+        # local_input=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+        local_input="/samples/input/gender_enrichment.csv"
     # s3_utils.download_file(BUCKET,INPUT_FILE,local_input)
         s3_utils.download_file(input_bucket,input_key,local_input)
    #FOR PIPELINIGN PURPOSE. (kind of working)
@@ -46,7 +47,8 @@ def enrich_gender(input_bucket,input_key,out_bucket,out_key):
         merged_df.fillna({"gender":"UNKNOWN"},inplace=True) #handle the unknow gender
 
     #Step5-Save the output file
-        local_output=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+        # local_output=tempfile.NamedTemporaryFile(delete=False,suffix=".csv").name
+        local_output="/samples/output/final_enriched.csv"
         merged_df.to_csv(local_output,index=False)
 
     #Step6-Upload the output file
