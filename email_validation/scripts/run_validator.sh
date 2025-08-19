@@ -1,4 +1,4 @@
-
+#!/bin/bash
 set -e
 
 CPP_DIR="/opt/airflow/dags/email_validation/cpp"

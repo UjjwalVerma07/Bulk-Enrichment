@@ -39,8 +39,8 @@ with DAG(
             conf={
                 "input_bucket": input_bucket,
                 "input_key": input_key,
-                "output_bucket": out_bucket,
-                "output_key": out_key
+                "out_bucket": out_bucket,
+                "out_key": out_key
             },
             wait_for_completion=True
         )

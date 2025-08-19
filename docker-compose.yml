@@ -35,6 +35,10 @@ services:
       - ./email_validation/dags:/opt/airflow/dags/email_validation
       - ./email_validation/cpp:/opt/airflow/dags/email_validation/cpp
       - ./email_validation/scripts:/opt/airflow/dags/email_validation/scripts
+
+
+
+      # - ./email_validation:/opt/airflow/dags/email_validation #(We are Trying this one)
       - ./reverse_geocode/dags:/opt/airflow/dags/reverse_geocode
       - ./gender_enrichment/dags:/opt/airflow/dags/gender_enrichment
       - ./common/libs:/opt/airflow/common/libs
@@ -65,6 +69,9 @@ services:
       - ./email_validation/dags:/opt/airflow/dags/email_validation
       - ./email_validation/cpp:/opt/airflow/dags/email_validation/cpp
       - ./email_validation/scripts:/opt/airflow/dags/email_validation/scripts
+
+
+      # - ./email_validation:/opt/airflow/dags/email_validation #(We are Trying this one)
       - ./reverse_geocode/dags:/opt/airflow/dags/reverse_geocode
       - ./gender_enrichment/dags:/opt/airflow/dags/gender_enrichment
       - ./common/libs:/opt/airflow/common/libs

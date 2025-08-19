@@ -82,16 +82,22 @@ with DAG(
     schedule_interval=None,
     start_date=datetime(2025,1,1),
     catchup=False,
-    tags=["enrichment"]
+    tags=["enrichment"],
+    params={
+        "input_bucket": DEFAULT_INPUT_BUCKET,
+        "input_key": DEFAULT_INPUT_KEY,
+        "out_bucket": DEFAULT_OUT_BUCKET,
+        "out_key": DEFAULT_OUT_KEY
+    }
 ) as dag:
     reverse_geocode_task=PythonOperator(
         task_id="reverse_geocode_task",
         python_callable=run_reverse_geocode,
         op_kwargs={
-            "input_bucket":"{{dag_run.conf.get('input_bucket','"+ DEFAULT_INPUT_BUCKET+"')}}",
-            "input_key":"{{dag_run.conf.get('input_key','"+ DEFAULT_INPUT_KEY+"')}}",
-            "out_bucket":"{{dag_run.conf.get('out_bucket','"+ DEFAULT_OUT_BUCKET+"')}}",
-            "out_key":"{{dag_run.conf.get('out_key','"+ DEFAULT_OUT_KEY+"')}}",
+            "input_bucket":"{{dag_run.conf.get('input_bucket',params.input_bucket)}}",
+            "input_key":"{{dag_run.conf.get('input_key',params.input_key)}}",
+            "out_bucket":"{{dag_run.conf.get('out_bucket',params.out_bucket)}}",
+            "out_key":"{{dag_run.conf.get('out_key',params.out_key)}}",
         },
     )
 
