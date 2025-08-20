@@ -11,6 +11,42 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+
+
+  #Init services
+  airflow-init:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      AIRFLOW_WEBSERVER_SECRET_KEY: 'my_shared_secret_key'
+    volumes:
+      - ./orchestrator/dags:/opt/airflow/dags/orchestrator
+      - ./orchestrator/config:/opt/airflow/dags/config
+      - ./email_validation:/opt/airflow/dags/email_validation
+      - ./reverse_geocode/dags:/opt/airflow/dags/reverse_geocode
+      - ./gender_enrichment/dags:/opt/airflow/dags/gender_enrichment
+      - ./common/libs:/opt/airflow/common/libs
+      - ./samples/input:/samples/input
+      - ./samples/output:/samples/output
+      - ./gender_enrichment/data:/gender_enrichment/data
+      - ./reverse_geocode/data:/reverse_geocode/data
+    command: >
+      bash -c "
+        airflow db upgrade &&
+        airflow users create \
+          --username admin \
+          --password admin \
+          --firstname Admin \
+          --lastname User \
+          --role Admin \
+          --email admin@example.com || true
+      "
+
   # Airflow Scheduler & Webserver
   airflow-webserver:
     # image: apache/airflow:2.9.2
