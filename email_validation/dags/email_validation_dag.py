@@ -38,7 +38,7 @@ def validate_emails(input_bucket,input_key,out_bucket,out_key):
         try:
             subprocess.run(
                 ["/opt/airflow/dags/email_validation/scripts/run_validator.sh", local_input, local_output],
-                check=True
+                check=True 
                 )
         except subprocess.CalledProcessError as e:
             raise RuntimeError(f"Validator script failed: {e}")

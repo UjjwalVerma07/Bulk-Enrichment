@@ -16,6 +16,7 @@ DEFAULT_INPUT_KEY="customer_raw.csv"
 DEFAULT_OUT_BUCKET="enriched"
 DEFAULT_OUT_KEY="gender_enriched.csv"
 
+
 def enrich_gender(input_bucket,input_key,out_bucket,out_key):
     
     kafka_utils.send_event("pipeline-progress",{
