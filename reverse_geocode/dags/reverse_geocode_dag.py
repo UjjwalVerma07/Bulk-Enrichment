@@ -25,6 +25,7 @@ with DAG(
     catchup=False,
     tags=["Test-enrichment"],
     params={
+        "mode":"batch",
         "input_bucket": DEFAULT_INPUT_BUCKET,
         "input_key": DEFAULT_INPUT_KEY,
         "out_bucket": DEFAULT_OUT_BUCKET,
@@ -40,6 +41,7 @@ with DAG(
         docker_url="unix://var/run/docker.sock",
         network_mode="bulk-enrichment_airflow_network",
         environment={
+            "MODE": "{{ dag_run.conf.get('mode', params.mode) }}",
             "KAFKA_BROKER": "kafka:9092",
             "S3_ENDPOINT": "http://minio:9000",
             "INPUT_BUCKET": "{{ dag_run.conf.get('input_bucket', params.input_bucket) }}",

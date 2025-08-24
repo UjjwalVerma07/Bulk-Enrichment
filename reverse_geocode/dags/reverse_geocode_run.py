@@ -102,6 +102,45 @@ DEFAULT_INPUT_KEY = "customer_raw.csv"
 DEFAULT_OUT_BUCKET = "enriched"
 DEFAULT_OUT_KEY = "reverse_geocode_enriched.csv"
 
+def send_status(stage, status, error=None):
+    """Send status to Kafka + S3 progress."""
+    event = {
+        "stage": stage,
+        "status": status,
+        "time": datetime.now().isoformat()
+    }
+    if error:
+        event["error"] = error
+
+    kafka_utils.send_event("pipeline-progress", event)
+    progress.upload_progress_file(BUCKET, "progress", event)
+
+def run_reverse_geocode_stream(topic="reverse-geocode-input",out_topic="reverse-geocode-output"):
+    send_status("reverse_geocode","Started")
+    try:
+        s3_utils.download_file(BUCKET,GEO_MASTER_CSV,LOCAL_GEO_MASTER_CSV)
+        geo_master_df=pd.read_csv(LOCAL_GEO_MASTER_CSV)
+        for records in kafka_utils.consume_records(topic):
+            if not records:
+                continue
+            if isinstance(records,dict):
+                records=[records]
+            df=pd.DataFrame(records)
+
+            merged_df=pd.merge(df,geo_master_df,how="left",on=["latitude","longitude"])
+            merged_df.fillna({"city":"Unknown"},inplace=True)
+
+            enriched_records=merged_df.to_dict(orient="records")
+            kafka_utils.send_event(out_topic,enriched_records)
+
+        send_status("reverse_geocode","Succeeded")
+    except Exception as e:
+        send_status("reverse_geocode","Failed",error=str(e))
+        print(f"Error in Processing Stream:{str(e)}")
+        sys.exit(1)
+
+
+
 def run_reverse_geocode(input_bucket=DEFAULT_INPUT_BUCKET, input_key=DEFAULT_INPUT_KEY, out_bucket=DEFAULT_OUT_BUCKET, out_key=DEFAULT_OUT_KEY):
 
     kafka_utils.send_event("pipeline-progress",{
@@ -162,12 +201,15 @@ def run_reverse_geocode(input_bucket=DEFAULT_INPUT_BUCKET, input_key=DEFAULT_INP
         })
         print(f"ERROR in Downloading Input File: {error_msg}")
         sys.exit(1)
-
+ 
 if __name__ == "__main__":
-    run_reverse_geocode(
-        os.environ.get("INPUT_BUCKET"),
-        os.environ.get("INPUT_KEY"),
-        os.environ.get("OUT_BUCKET"),
-        os.environ.get("OUT_KEY")
-    )
-
+    mode = os.environ.get("MODE", "batch").lower()
+    if mode=="batch":
+        run_reverse_geocode(
+            os.environ.get("INPUT_BUCKET"),
+            os.environ.get("INPUT_KEY"),
+            os.environ.get("OUT_BUCKET"),
+            os.environ.get("OUT_KEY")
+        )
+    else:
+        run_reverse_geocode_stream()
