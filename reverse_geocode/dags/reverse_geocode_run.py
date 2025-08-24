@@ -102,7 +102,7 @@ DEFAULT_INPUT_KEY = "customer_raw.csv"
 DEFAULT_OUT_BUCKET = "enriched"
 DEFAULT_OUT_KEY = "reverse_geocode_enriched.csv"
 
-def run_reverse_geocode(input_bucket, input_key, out_bucket, out_key):
+def run_reverse_geocode(input_bucket=DEFAULT_INPUT_BUCKET, input_key=DEFAULT_INPUT_KEY, out_bucket=DEFAULT_OUT_BUCKET, out_key=DEFAULT_OUT_KEY):
 
     kafka_utils.send_event("pipeline-progress",{
         "stage":"reverse_geocode",
@@ -165,9 +165,9 @@ def run_reverse_geocode(input_bucket, input_key, out_bucket, out_key):
 
 if __name__ == "__main__":
     run_reverse_geocode(
-        input_bucket=DEFAULT_INPUT_BUCKET,
-        input_key=DEFAULT_INPUT_KEY,
-        out_bucket=DEFAULT_OUT_BUCKET,
-        out_key=DEFAULT_OUT_KEY
+        os.environ.get("INPUT_BUCKET"),
+        os.environ.get("INPUT_KEY"),
+        os.environ.get("OUT_BUCKET"),
+        os.environ.get("OUT_KEY")
     )
 
