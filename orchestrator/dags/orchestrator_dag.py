@@ -2,13 +2,35 @@
 from datetime import datetime
 from airflow import DAG
 import yaml
+import json
+from kafka import KafkaConsumer
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
-def load_pipline_config():
+def load_pipeline_config():
     with open("/opt/airflow/dags/config/pipeline.yml","r") as f:
         return yaml.safe_load(f)
+
+def load_pipeline_config_from_kafka():
+    # Implement Kafka consumer logic to fetch the pipeline config
+    consumer=KafkaConsumer(
+        "pipeline-config",
+        bootstrap_servers=['kafka:9092'],
+        auto_offset_reset="earliest",
+        enable_auto_commit=True,
+        value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+    )
+    config=None
+    for message in consumer:
+        config=message.value
+        break
+    consumer.close()
+
+    if config is None:
+        config=load_pipeline_config();
+        # raise ValueError("No pipeline configuration received from Kafka")
+    return config
 
 with DAG(
     dag_id="orchestrator_dag", 
@@ -20,7 +42,8 @@ with DAG(
     start=EmptyOperator(task_id="start")
     end=EmptyOperator(task_id="end")
 
-    config=load_pipline_config()
+    # config=load_pipline_config()
+    config=load_pipeline_config_from_kafka()
     sequence=config["sequence"]
 
     input_bucket=config["input_bucket"]
@@ -51,3 +74,6 @@ with DAG(
         input_key=out_key
     prev_task >> end
 
+
+
+   
