@@ -5,6 +5,8 @@ from common.libs import s3_utils,kafka_utils,progress
 from datetime import datetime
 import subprocess
 import pandas as pd,os,tempfile,json
+from airflow.providers.docker.operators.docker import DockerOperator
+from docker.types import Mount
 
 BUCKET="raw"
 LOCAL_INPUT="/samples/input/gender_enrichment.csv"
@@ -15,67 +17,7 @@ DEFAULT_INPUT_BUCKET="raw"
 DEFAULT_INPUT_KEY="customer_raw.csv"
 DEFAULT_OUT_BUCKET="enriched"
 DEFAULT_OUT_KEY="gender_enriched.csv"
-
-
-def enrich_gender(input_bucket,input_key,out_bucket,out_key):
-    
-    kafka_utils.send_event("pipeline-progress",{
-        "stage":"gender_enrichment",
-        "status":"Started",
-        "time":datetime.now().isoformat()
-    })
-    progress.upload_progress_file(BUCKET,"progress",{
-        "stage":"gender_enrichment",
-        "status":"Started",
-        "time":datetime.now().isoformat()
-    })
-
-
-    try:
-    #Step1 - download the inputfile
-        local_input=LOCAL_INPUT
-        s3_utils.download_file(input_bucket,input_key,local_input)
-        local_gender_master=LOCAL_GENDER_MASTER_CSV
-        s3_utils.download_file(BUCKET,GENDER_MASTER_CSV,local_gender_master)
-        df=pd.read_csv(local_input)
-        gender_master_df=pd.read_csv(local_gender_master)
-
-    #Step4-Merge the dataframe
-        merged_df=pd.merge(df,gender_master_df,on="name",how="left")
-        merged_df.fillna({"gender":"UNKNOWN"},inplace=True) #handle the unknow gender
-
-    #Step5-Save the output file
-        local_output=LOCAL_OUTPUT
-        merged_df.to_csv(local_output,index=False)
-
-    #Step6-Upload the output file
-        s3_utils.upload_file(out_bucket,out_key,local_output)
-    #Step7- Send Message to kafka and update the progress file
-
-        kafka_utils.send_event("pipeline-progress",{
-            "stage":"gender_enrichment",
-            "status":"Succeeded",
-            "date":datetime.now().isoformat()
-            })
-
-        progress.upload_progress_file(BUCKET,"progress",{
-            "stage":"gender_enrichment",
-            "status":"Succeeded",
-            "date":datetime.now().isoformat()
-            })
-    except Exception as e:
-        kafka_utils.send_event("pipeline-progress",{
-            "stage":"gender_enrichment",
-            "status":"Failed",
-            "date":datetime.now().isoformat()
-        })
-        progress.upload_progress_file(BUCKET,"progress",{
-            "stage":"gender_enrichment",
-            "status":"Failed",
-            "date":datetime.now().isoformat()
-        })
-
-
+ 
 with DAG(
     dag_id="gender_enrichment_dag",
     schedule_interval=None,
@@ -89,14 +31,27 @@ with DAG(
         "out_key": DEFAULT_OUT_KEY
     }
 ) as dag:
-    gender_enrichment_task=PythonOperator(
-        task_id="gender_enrichment_task",
-        python_callable=enrich_gender,
-        op_kwargs={
-            "input_bucket":"{{dag_run.conf.get('input_bucket',params.input_bucket)}}",
-            "input_key":"{{dag_run.conf.get('input_key',params.input_key)}}",
-            "out_bucket":"{{dag_run.conf.get('out_bucket',params.out_bucket)}}",
-            "out_key":"{{dag_run.conf.get('out_key',params.out_key)}}",
+    gender_enrichment_task=DockerOperator(
+        task_id="gender_enrich_task",
+        image="gender_enrichment_image",
+        api_version="auto",
+        auto_remove=False,
+        command="python /opt/airflow/dags/gender_enrichment/enrich_gender_run.py",
+        docker_url="unix://var/run/docker.sock",
+        network_mode="bulk-enrichment_airflow_network",
+        environment={
+            "KAFKA_BROKER": "kafka:9092",
+            "S3_ENDPOINT": "http://minio:9000",
+            "INPUT_BUCKET": "{{ dag_run.conf.get('input_bucket', params.input_bucket) }}",
+            "INPUT_KEY": "{{ dag_run.conf.get('input_key', params.input_key) }}",
+            "OUT_BUCKET": "{{ dag_run.conf.get('out_bucket', params.out_bucket) }}",
+            "OUT_KEY": "{{ dag_run.conf.get('out_key', params.out_key) }}"
         },
+        mounts=[
+        Mount(source="/Users/uverma/bulk-enrichment/gender_enrichment/data", target="/gender_enrichment/data", type="bind"),
+        Mount(source="/Users/uverma/bulk-enrichment/samples/input", target="/samples/input", type="bind"),
+        Mount(source="/Users/uverma/bulk-enrichment/samples/output", target="/samples/output", type="bind"),
+        ],
+        mount_tmp_dir=False
     )
 

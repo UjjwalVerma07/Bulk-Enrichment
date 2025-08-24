@@ -1,6 +1,8 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.empty import EmptyOperator
+from airflow.providers.docker.operators.docker import DockerOperator
+from docker.types import Mount
 from common.libs import s3_utils,kafka_utils,progress
 from datetime import datetime
 import subprocess
@@ -13,59 +15,7 @@ DEFAULT_INPUT_BUCKET="raw"
 DEFAULT_INPUT_KEY="customer_raw.csv"
 DEFAULT_OUT_BUCKET="enriched"
 DEFAULT_OUT_KEY="email_validated.csv"
-
-def validate_emails(input_bucket,input_key,out_bucket,out_key):
-    kafka_utils.send_event("pipeline-progress",{
-        "stage":"email_validation",
-        "status":"Started",
-        "time":datetime.now().isoformat(),
-    })
-    progress.upload_progress_file(BUCKET,"progress",{
-        "stage":"email_validation",
-        "status":"Started",
-        "time":datetime.now().isoformat()
-    })
-    
-    try:
-
-        local_input=LOCAL_INPUT
-        s3_utils.download_file(input_bucket,input_key,local_input)
-        df=pd.read_csv(local_input)
-        local_output=LOCAL_OUTPUT
-
-
-    #Step3:- Run the validation Script
-        try:
-            subprocess.run(
-                ["/opt/airflow/dags/email_validation/scripts/run_validator.sh", local_input, local_output],
-                check=True 
-                )
-        except subprocess.CalledProcessError as e:
-            raise RuntimeError(f"Validator script failed: {e}")
-    
-    #Step4:- Upload the output file backe to s3    
-        s3_utils.upload_file(out_bucket,out_key,local_output)
-        kafka_utils.send_event("pipeline-progress",{
-            "stage":"email_validation",
-            "status":"Succeeded",
-            "time":datetime.now().isoformat()
-        })
-        progress.upload_progress_file(BUCKET,"progress",{
-            "stage":"email_validation",
-            "status":"Succeeded",
-            "time":datetime.now().isoformat()
-        })
-    except Exception as e:
-        kafka_utils.send_event("pipeline-progress",{
-            "stage":"email_validation",
-            "status":"Failed",
-            "time":datetime.now().isoformat()
-        })
-        progress.upload_progress_file(BUCKET,"progress",{
-            "stage":"email_validation",
-            "status":"Failed",
-            "time":datetime.now().isoformat()
-        })
+   
 
 with DAG(
     dag_id="email_validation_dag",
@@ -80,13 +30,27 @@ with DAG(
         "out_key": DEFAULT_OUT_KEY
     }
 )as dag:
-    task=PythonOperator(
+    email_validation_task=DockerOperator(
         task_id="validate_emails", 
-        python_callable=validate_emails,
-        op_kwargs={
-     "input_bucket":"{{dag_run.conf.get('input_bucket',params.input_bucket)}}",
-     "input_key":"{{dag_run.conf.get('input_key',params.input_key)}}",
-     "out_bucket":"{{dag_run.conf.get('out_bucket',params.out_bucket)}}",
-     "out_key":"{{dag_run.conf.get('out_key',params.out_key)}}",
+        image="email_validation_image",
+        api_version="auto",
+        auto_remove=True,
+        command="python /opt/airflow/dags/email_validation/enrich_email_run.py",
+        docker_url="unix://var/run/docker.sock",
+        network_mode="bulk-enrichment_airflow_network",
+        environment={
+            "KAFKA_BROKER": "kafka:9092",
+            "S3_ENDPOINT": "http://minio:9000",
+            "INPUT_BUCKET":"{{dag_run.conf.get('input_bucket',params.input_bucket)}}",
+            "INPUT_KEY":"{{dag_run.conf.get('input_key',params.input_key)}}",
+            "OUT_BUCKET":"{{dag_run.conf.get('out_bucket',params.out_bucket)}}",
+            "OUT_KEY":"{{dag_run.conf.get('out_key',params.out_key)}}",
         },
+        mounts=[
+        # Mount(source="/Users/uverma/bulk-enrichment/reverse_geocode", target="/opt/airflow/dags/reverse_geocode", type="bind"),
+        # Mount(source="/Users/uverma/bulk-enrichment/reverse_geocode/data", target="/reverse_geocode/data", type="bind"),
+        Mount(source="/Users/uverma/bulk-enrichment/samples/input", target="/samples/input", type="bind"),
+        Mount(source="/Users/uverma/bulk-enrichment/samples/output", target="/samples/output", type="bind"),
+    ],
+
     )

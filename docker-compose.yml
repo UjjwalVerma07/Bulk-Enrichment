@@ -1,5 +1,7 @@
 # version: '3.8'
-
+networks:
+  airflow_network:
+    driver: bridge
 services:
   # Airflow Metadata Database
   postgres:
@@ -10,6 +12,8 @@ services:
       POSTGRES_DB: airflow
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - airflow_network
 
 
 
@@ -27,14 +31,16 @@ services:
     volumes:
       - ./orchestrator/dags:/opt/airflow/dags/orchestrator
       - ./orchestrator/config:/opt/airflow/dags/config
+      - ./common/libs:/opt/airflow/common/libs
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./email_validation:/opt/airflow/dags/email_validation
       - ./reverse_geocode/dags:/opt/airflow/dags/reverse_geocode
-      - ./gender_enrichment/dags:/opt/airflow/dags/gender_enrichment
-      - ./common/libs:/opt/airflow/common/libs
-      - ./samples/input:/samples/input
-      - ./samples/output:/samples/output
-      - ./gender_enrichment/data:/gender_enrichment/data
-      - ./reverse_geocode/data:/reverse_geocode/data
+      # - ./gender_enrichment/dags:/opt/airflow/dags/gender_enrichment
+      # - ./common/libs:/opt/airflow/common/libs
+      # - ./samples/input:/samples/input
+      # - ./samples/output:/samples/output
+      # - ./gender_enrichment/data:/gender_enrichment/data
+      # - ./reverse_geocode/data:/reverse_geocode/data
     command: >
       bash -c "
         airflow db upgrade &&
@@ -46,6 +52,8 @@ services:
           --role Admin \
           --email admin@example.com || true
       "
+    networks:
+      - airflow_network
 
   # Airflow Scheduler & Webserver
   airflow-webserver:
@@ -68,24 +76,30 @@ services:
     volumes:
       - ./orchestrator/dags:/opt/airflow/dags/orchestrator
       - ./orchestrator/config:/opt/airflow/dags/config
-      # - ./email_validation/dags:/opt/airflow/dags/email_validation
+      - ./common/libs:/opt/airflow/common/libs
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./reverse_geocode/data:/reverse_geocode/data
+      - ./reverse_geocode/data:/reverse_geocode/data
+      - ./email_validation/dags:/opt/airflow/dags/email_validation
       # - ./email_validation/cpp:/opt/airflow/dags/email_validation/cpp
       # - ./email_validation/scripts:/opt/airflow/dags/email_validation/scripts
 
 
 
-      - ./email_validation:/opt/airflow/dags/email_validation #(We are Trying this one)
+      # - ./email_validation:/opt/airflow/dags/email_validation #(We are Trying this one)
       - ./reverse_geocode/dags:/opt/airflow/dags/reverse_geocode
       - ./gender_enrichment/dags:/opt/airflow/dags/gender_enrichment
-      - ./common/libs:/opt/airflow/common/libs
-      - ./samples/input:/samples/input
-      - ./samples/output:/samples/output
-      - ./gender_enrichment/data:/gender_enrichment/data
-      - ./reverse_geocode/data:/reverse_geocode/data
+      # - ./common/libs:/opt/airflow/common/libs
+      # - ./samples/input:/samples/input
+      # - ./samples/output:/samples/output
+      # - ./gender_enrichment/data:/gender_enrichment/data
+      # - ./reverse_geocode/data:/reverse_geocode/data
       # - ./tmp:/tmp
     ports:
       - "8080:8080"
     command: webserver
+    networks:
+      - airflow_network
 
   airflow-scheduler:
     # image: apache/airflow:2.9.2
@@ -102,21 +116,26 @@ services:
     volumes:
       - ./orchestrator/dags:/opt/airflow/dags/orchestrator
       - ./orchestrator/config:/opt/airflow/dags/config
-      # - ./email_validation/dags:/opt/airflow/dags/email_validation
+      - ./common/libs:/opt/airflow/common/libs
+      - ./reverse_geocode/data:/reverse_geocode/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./email_validation/dags:/opt/airflow/dags/email_validation
       # - ./email_validation/cpp:/opt/airflow/dags/email_validation/cpp
       # - ./email_validation/scripts:/opt/airflow/dags/email_validation/scripts
 
 
-      - ./email_validation:/opt/airflow/dags/email_validation #(We are Trying this one)
+      # - ./email_validation:/opt/airflow/dags/email_validation #(We are Trying this one)
       - ./reverse_geocode/dags:/opt/airflow/dags/reverse_geocode
       - ./gender_enrichment/dags:/opt/airflow/dags/gender_enrichment
-      - ./common/libs:/opt/airflow/common/libs
-      - ./samples/input:/samples/input
-      - ./samples/output:/samples/output
-      - ./gender_enrichment/data:/gender_enrichment/data
-      - ./reverse_geocode/data:/reverse_geocode/data
+      # - ./common/libs:/opt/airflow/common/libs
+      # - ./samples/input:/samples/input
+      # - ./samples/output:/samples/output
+      # - ./gender_enrichment/data:/gender_enrichment/data
+      # - ./reverse_geocode/data:/reverse_geocode/data
       # - ./tmp:/tmp
     command: scheduler
+    networks:
+      - airflow_network
 
   # MinIO (S3-compatible storage)
   minio:
@@ -130,6 +149,8 @@ services:
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
+    networks:
+      - airflow_network
 
   # Kafka + Zookeeper
   zookeeper:
@@ -138,6 +159,8 @@ services:
       - "2181:2181"
     environment:
       ALLOW_ANONYMOUS_LOGIN: 'yes'
+    networks:
+      - airflow_network
 
   kafka:
     image: bitnami/kafka:3.7
@@ -151,6 +174,48 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
     depends_on:
       - zookeeper
+    networks:
+      - airflow_network
+
+#Custom images (For Docker Operator)
+  email_validation:
+    build:
+      context: .
+      dockerfile: email_validation/Dockerfile
+    image: email_validation_image
+    volumes:
+      - ./email_validation:/opt/airflow/dags/email_validation
+      - ./samples/input:/samples/input
+      - ./samples/output:/samples/output
+    networks:
+      - airflow_network
+
+  reverse_geocode:
+    build:
+      context: .
+      dockerfile: reverse_geocode/Dockerfile
+    image: reverse_geocode_image
+    volumes:
+      - ./reverse_geocode:/opt/airflow/dags/reverse_geocode
+      - ./reverse_geocode/data:/reverse_geocode/data
+      - ./samples/input:/samples/input
+      - ./samples/output:/samples/output
+    networks:
+      - airflow_network
+
+  gender_enrichment:
+    build:
+      context: .
+      dockerfile: gender_enrichment/Dockerfile
+    image: gender_enrichment_image
+    volumes:
+      - ./gender_enrichment:/opt/airflow/dags/gender_enrichment
+      - ./gender_enrichment/data:/gender_enrichment/data
+      - ./samples/input:/samples/input
+      - ./samples/output:/samples/output
+    networks:
+      - airflow_network
+
 
 volumes:
   postgres_data:
