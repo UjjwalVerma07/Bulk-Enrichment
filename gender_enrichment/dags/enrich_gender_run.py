@@ -1,3 +1,4 @@
+import sys
 from common.libs import s3_utils,kafka_utils,progress
 from datetime import datetime
 import subprocess
@@ -14,6 +15,44 @@ DEFAULT_INPUT_BUCKET="raw"
 DEFAULT_INPUT_KEY="customer_raw.csv"
 DEFAULT_OUT_BUCKET="enriched"
 DEFAULT_OUT_KEY="gender_enriched.csv"
+
+def send_status(stage, status, error=None):
+    """Send status to Kafka + S3 progress."""
+    event = {
+        "stage": stage,
+        "status": status,
+        "time": datetime.now().isoformat()
+    }
+    if error:
+        event["error"] = error
+
+    kafka_utils.send_event("pipeline-progress", event)
+    progress.upload_progress_file(BUCKET, "progress", event)
+
+
+def real_enrich_gender(topic="gender-enrich-input",out_topic="gender-enrich-output"):
+    send_status("gender-enrichment","Started")
+    try:
+        s3_utils.download_file(BUCKET,GENDER_MASTER_CSV,LOCAL_GENDER_MASTER_CSV)
+        geo_master_df=pd.read_csv(LOCAL_GENDER_MASTER_CSV)
+        for records in kafka_utils.consume_records(topic):
+            if not records:
+                continue
+            if isinstance(records,dict):
+                records=[records]
+                
+            df=pd.DataFrame(records)
+            merged_df=pd.merge(df,geo_master_df,on="name",how="left")
+            merged_df.fillna({"gender":"UNKNOWN"},inplace=True)
+
+            enriched_records=merged_df.to_dict(orient="records")
+            kafka_utils.send_event(out_topic,enriched_records)
+        send_status("gender-enrichment","Succeeded")
+    except Exception as e:
+        send_status("gender-enrichment","Failed",error=str(e))
+        print(f"Error in Processing Stream:{str(e)}")
+        sys.exit(1)
+
 
 
 def enrich_gender(input_bucket=DEFAULT_INPUT_BUCKET,input_key=DEFAULT_INPUT_KEY,out_bucket=DEFAULT_OUT_BUCKET,out_key=DEFAULT_OUT_KEY):  
@@ -72,11 +111,18 @@ def enrich_gender(input_bucket=DEFAULT_INPUT_BUCKET,input_key=DEFAULT_INPUT_KEY,
             "date":datetime.now().isoformat()
         })
 
+    
+
+
 
 if __name__=="__main__":
-    enrich_gender(
-        os.environ.get("INPUT_BUCKET"),
-        os.environ.get("INPUT_KEY"),
-        os.environ.get("OUT_BUCKET"),
-        os.environ.get("OUT_KEY")
-    )
+    mode=os.getenv("MODE","batch").lower()
+    if mode=="batch":
+        enrich_gender(
+            input_bucket=os.environ.get("INPUT_BUCKET"),
+            input_key=os.environ.get("INPUT_KEY"),
+            out_bucket=os.environ.get("OUT_BUCKET"),
+            out_key=os.environ.get("OUT_KEY")
+        )
+    else:
+        real_enrich_gender()

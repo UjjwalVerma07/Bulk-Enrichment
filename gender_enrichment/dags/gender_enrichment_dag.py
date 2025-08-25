@@ -1,5 +1,6 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.operators.python import BranchPythonOperator
 from airflow.operators.empty import EmptyOperator
 from common.libs import s3_utils,kafka_utils,progress
 from datetime import datetime
@@ -22,15 +23,17 @@ with DAG(
     dag_id="gender_enrichment_dag",
     schedule_interval=None,
     start_date=datetime(2025,1,1),
-    catchup=False,
+    catchup=False, 
     tags=["gender_enrichment"],
     params={
+        "mode":"batch",
         "input_bucket": DEFAULT_INPUT_BUCKET,
         "input_key": DEFAULT_INPUT_KEY,
         "out_bucket": DEFAULT_OUT_BUCKET,
         "out_key": DEFAULT_OUT_KEY
     }
 ) as dag:
+    start=EmptyOperator(task_id="start")
     gender_enrichment_task=DockerOperator(
         task_id="gender_enrich_task",
         image="gender_enrichment_image",
@@ -54,4 +57,45 @@ with DAG(
         ],
         mount_tmp_dir=False
     )
+
+    realtime_gender_enrichment_task=DockerOperator(
+        task_id="realtime_gender_enrichment_task",
+        image="gender_enrichment_image",
+        api_version="auto",
+        auto_remove=False,
+        command="python /opt/airflow/dags/gender_enrichment/enrich_gender_run.py",
+        docker_url="unix://var/run/docker.sock",
+        network_mode="bulk-enrichment_airflow_network",
+        environment={
+            "KAFKA_BROKER": "kafka:9092",
+            "S3_ENDPOINT": "http://minio:9000",
+            "MODE": "realtime"
+        },
+        mounts=[
+            Mount(source="/Users/uverma/bulk-enrichment/gender_enrichment/data", target="/gender_enrichment/data", type="bind"),
+            Mount(source="/Users/uverma/bulk-enrichment/samples/input", target="/samples/input", type="bind"),
+            Mount(source="/Users/uverma/bulk-enrichment/samples/output", target="/samples/output", type="bind"),
+        ],
+        mount_tmp_dir=False
+    )
+
+    def choose_mode(**context):
+        mode=context["params"].get("mode","batch")
+        if mode=="batch":
+            return "gender_enrich_task"
+        else:
+            return "realtime_gender_enrichment_task"
+
+    
+    branch=BranchPythonOperator(
+        task_id="branch_mode",
+        python_callable=choose_mode,
+        provide_context=True
+    )
+
+    end=EmptyOperator(task_id="end")
+
+    start >> branch
+    branch >> gender_enrichment_task >> end
+    branch >> realtime_gender_enrichment_task >> end
 

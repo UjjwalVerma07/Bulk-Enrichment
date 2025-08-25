@@ -3,6 +3,7 @@ from airflow.operators.python import PythonOperator
 from airflow.operators.empty import EmptyOperator
 from docker.types import Mount
 from airflow.providers.docker.operators.docker import DockerOperator
+from airflow.operators.python import BranchPythonOperator
 from common.libs import s3_utils,kafka_utils,progress
 from datetime import datetime
 import subprocess
@@ -32,6 +33,9 @@ with DAG(
         "out_key": DEFAULT_OUT_KEY
     }
 ) as dag:
+    
+    start=EmptyOperator(task_id="start")
+
     reverse_geocode_task=DockerOperator(
         task_id="reverse_geocode_task",
         image="reverse_geocode_image",
@@ -55,7 +59,49 @@ with DAG(
         Mount(source="/Users/uverma/bulk-enrichment/samples/input", target="/samples/input", type="bind"),
         Mount(source="/Users/uverma/bulk-enrichment/samples/output", target="/samples/output", type="bind"),
     ],
-
         mount_tmp_dir=False
     )
 
+
+    realtime_task=DockerOperator(
+        task_id="realtime_reverse_geocode",
+        image="reverse_geocode_image",
+        api_version="auto",
+        auto_remove=False,
+        command="python /opt/airflow/dags/reverse_geocode/reverse_geocode_run.py",
+        docker_url="unix://var/run/docker.sock",
+        network_mode="bulk-enrichment_airflow_network",
+        environment={
+            "MODE": "realtime",
+            "KAFKA_BROKER": "kafka:9092",
+            "S3_ENDPOINT": "http://minio:9000",
+            # In realtime mode, INPUT/OUTPUT may not be used, Kafka messages are consumed directly
+        },
+        mounts=[
+            Mount(source="/Users/uverma/bulk-enrichment/reverse_geocode/data", target="/reverse_geocode/data", type="bind"),
+            Mount(source="/Users/uverma/bulk-enrichment/samples/input", target="/samples/input", type="bind"),
+            Mount(source="/Users/uverma/bulk-enrichment/samples/output", target="/samples/output", type="bind"),
+        ],
+        mount_tmp_dir=False
+    )
+
+
+    def choose_mode(**context):
+        mode=context["params"].get("mode","batch")
+        if mode=="batch":
+            return "reverse_geocode_task"
+        else:
+            return "realtime_reverse_geocode"
+
+    
+    branch=BranchPythonOperator(
+        task_id="branch_mode",
+        python_callable=choose_mode,
+        provide_context=True
+    )
+
+    end=EmptyOperator(task_id="end")
+
+    start >> branch
+    branch >> reverse_geocode_task >> end
+    branch >> realtime_task >> end
