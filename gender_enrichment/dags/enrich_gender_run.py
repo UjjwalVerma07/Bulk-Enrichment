@@ -125,4 +125,7 @@ if __name__=="__main__":
             out_key=os.environ.get("OUT_KEY")
         )
     else:
-        real_enrich_gender()
+        real_enrich_gender(
+            os.environ.get("INPUT_TOPIC"),
+            os.environ.get("OUTPUT_TOPIC")
+        )

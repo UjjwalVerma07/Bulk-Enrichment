@@ -18,7 +18,9 @@ DEFAULT_INPUT_BUCKET="raw"
 DEFAULT_INPUT_KEY="customer_raw.csv"
 DEFAULT_OUT_BUCKET="enriched"
 DEFAULT_OUT_KEY="gender_enriched.csv"
- 
+DEFAULT_INPUT_TOPIC="gender-enrich-input"
+DEFAULT_OUTPUT_TOPIC="gender-enrich-output"
+
 with DAG(
     dag_id="gender_enrichment_dag",
     schedule_interval=None,
@@ -30,7 +32,9 @@ with DAG(
         "input_bucket": DEFAULT_INPUT_BUCKET,
         "input_key": DEFAULT_INPUT_KEY,
         "out_bucket": DEFAULT_OUT_BUCKET,
-        "out_key": DEFAULT_OUT_KEY
+        "out_key": DEFAULT_OUT_KEY,
+        "input_key":DEFAULT_INPUT_TOPIC,
+        "output_key":DEFAULT_OUTPUT_TOPIC,
     }
 ) as dag:
     start=EmptyOperator(task_id="start")
@@ -69,7 +73,9 @@ with DAG(
         environment={
             "KAFKA_BROKER": "kafka:9092",
             "S3_ENDPOINT": "http://minio:9000",
-            "MODE": "realtime"
+            "MODE": "{{ dag_run.conf.get('mode', params.mode) }}",
+            "INPUT_TOPIC": "{{ dag_run.conf.get('input_topic', params.input_topic) }}",
+            "OUTPUT_TOPIC": "{{ dag_run.conf.get('out_topic', params.output_topic) }}"
         },
         mounts=[
             Mount(source="/Users/uverma/bulk-enrichment/gender_enrichment/data", target="/gender_enrichment/data", type="bind"),

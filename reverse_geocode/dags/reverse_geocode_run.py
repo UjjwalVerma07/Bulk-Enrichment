@@ -212,4 +212,7 @@ if __name__ == "__main__":
             os.environ.get("OUT_KEY")
         )
     else:
-        run_reverse_geocode_stream()
+        run_reverse_geocode_stream(
+            os.environ.get("INPUT_TOPIC"),
+            os.environ.get("OUTPUT_TOPIC")
+        )

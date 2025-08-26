@@ -16,7 +16,8 @@ DEFAULT_INPUT_BUCKET="raw"
 DEFAULT_INPUT_KEY="customer_raw.csv"
 DEFAULT_OUT_BUCKET="enriched"
 DEFAULT_OUT_KEY="email_validated.csv"
-   
+DEFAULT_INPUT_TOPIC="email-validation-input"
+DEFAULT_OUTPUT_TOPIC="email-validation-output"
 
 with DAG(
     dag_id="email_validation_dag",
@@ -29,7 +30,9 @@ with DAG(
         "input_bucket": DEFAULT_INPUT_BUCKET,
         "input_key": DEFAULT_INPUT_KEY,
         "out_bucket": DEFAULT_OUT_BUCKET,
-        "out_key": DEFAULT_OUT_KEY
+        "out_key": DEFAULT_OUT_KEY,
+        "input_topic":DEFAULT_INPUT_TOPIC,
+        "output_topic":DEFAULT_OUTPUT_TOPIC
     }
 )as dag:
     start=EmptyOperator(task_id="start")
@@ -67,10 +70,12 @@ with DAG(
         docker_url="unix://var/run/docker.sock",
         network_mode="bulk-enrichment_airflow_network",
         environment={
-            "MODE": "realtime",
+            "MODE": "{{ dag_run.conf.get('mode', params.mode) }}",
             "KAFKA_BROKER": "kafka:9092",
             "S3_ENDPOINT": "http://minio:9000",
             # In realtime mode, INPUT/OUTPUT may not be used, Kafka messages are consumed directly
+            "INPUT_TOPIC": "{{ dag_run.conf.get('input_topic', params.input_topic) }}",
+            "OUTPUT_TOPIC": "{{ dag_run.conf.get('out_topic', params.output_topic) }}"
         },
         mounts=[
             Mount(source="/Users/uverma/bulk-enrichment/reverse_geocode/data", target="/reverse_geocode/data", type="bind"),
