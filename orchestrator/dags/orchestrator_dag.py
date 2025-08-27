@@ -286,18 +286,20 @@ def choose_mode(ti, **kwargs):
     else:
         return "end"
 
-
+import uuid;
 def wait_for_kafka_data(ti, **kwargs):
     config = ti.xcom_pull(task_ids='fetch_pipeline_config', key='pipeline_config')
     input_topic = config.get("main_input_topic", "enrich-input-topic")
-
+    # group_id = f"orchestrator_waiter_{uuid.uuid4()}"
     while True:
         consumer = KafkaConsumer(
             input_topic,
             bootstrap_servers=['kafka:9092'],
-            auto_offset_reset="earliest",
+            # auto_offset_reset="earliest",
+            auto_offset_reset="latest",
             enable_auto_commit=True,
             group_id="orchestrator_waiter",
+            # group_id=group_id,
             consumer_timeout_ms=5000
         )
         data_found = False

@@ -34,15 +34,15 @@ def real_enrich_gender(topic="gender-enrich-input",out_topic="gender-enrich-outp
     send_status("gender-enrichment","Started")
     try:
         s3_utils.download_file(BUCKET,GENDER_MASTER_CSV,LOCAL_GENDER_MASTER_CSV)
-        geo_master_df=pd.read_csv(LOCAL_GENDER_MASTER_CSV)
+        gender_master_df=pd.read_csv(LOCAL_GENDER_MASTER_CSV)
         for records in kafka_utils.consume_records(topic):
             if not records:
                 continue
-            if isinstance(records,dict):
+            if isinstance(records,dict): 
                 records=[records]
                 
             df=pd.DataFrame(records)
-            merged_df=pd.merge(df,geo_master_df,on="name",how="left")
+            merged_df=pd.merge(df,gender_master_df,on="name",how="left")
             merged_df.fillna({"gender":"UNKNOWN"},inplace=True)
 
             enriched_records=merged_df.to_dict(orient="records")
@@ -112,7 +112,7 @@ def enrich_gender(input_bucket=DEFAULT_INPUT_BUCKET,input_key=DEFAULT_INPUT_KEY,
         })
 
     
-
+ 
 
 
 if __name__=="__main__":

@@ -28,12 +28,14 @@ def send_event(topic,event_data):
     producer.flush()
     print(f"Sent event to topic '{topic}': {event_data}")
     producer.close()
-
+import uuid
 def consume_records(topic:str):
     consumer=KafkaConsumer(
         topic,
         bootstrap_servers=KAFKA_BROKER,
         auto_offset_reset="earliest",
+        # auto_offset_reset="latest",
+        # group_id=f"consumer_{uuid.uuid4()}",
         enable_auto_commit=True,
         value_deserializer=lambda x: json.loads(x.decode("utf-8")),
         consumer_timeout_ms=5000

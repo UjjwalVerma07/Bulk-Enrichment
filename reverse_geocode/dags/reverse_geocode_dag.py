@@ -106,7 +106,7 @@ with DAG(
         provide_context=True
     )
 
-    end=EmptyOperator(task_id="end")
+    end=EmptyOperator(task_id="end",trigger_rule="none_failed_min_one_success")
 
     start >> branch
     branch >> reverse_geocode_task >> end

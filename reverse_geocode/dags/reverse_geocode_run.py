@@ -153,7 +153,7 @@ def run_reverse_geocode(input_bucket=DEFAULT_INPUT_BUCKET, input_key=DEFAULT_INP
         "status":"Started",
         "time":datetime.now().isoformat()
     })
-
+ 
     try:
         # Step 1 - Download the input file 
         s3_utils.download_file(input_bucket, input_key, LOCAL_INPUT)

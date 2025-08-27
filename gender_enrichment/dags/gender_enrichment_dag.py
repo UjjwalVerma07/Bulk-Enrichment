@@ -33,8 +33,8 @@ with DAG(
         "input_key": DEFAULT_INPUT_KEY,
         "out_bucket": DEFAULT_OUT_BUCKET,
         "out_key": DEFAULT_OUT_KEY,
-        "input_key":DEFAULT_INPUT_TOPIC,
-        "output_key":DEFAULT_OUTPUT_TOPIC,
+        "input_topic":DEFAULT_INPUT_TOPIC,
+        "output_topic":DEFAULT_OUTPUT_TOPIC,
     }
 ) as dag:
     start=EmptyOperator(task_id="start")
@@ -99,9 +99,10 @@ with DAG(
         provide_context=True
     )
 
-    end=EmptyOperator(task_id="end")
+    end=EmptyOperator(task_id="end",trigger_rule="none_failed_min_one_success")
 
     start >> branch
     branch >> gender_enrichment_task >> end
     branch >> realtime_gender_enrichment_task >> end
 
+ 
