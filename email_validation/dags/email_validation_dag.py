@@ -78,7 +78,7 @@ with DAG(
             "OUTPUT_TOPIC": "{{ dag_run.conf.get('out_topic', params.output_topic) }}"
         },
         mounts=[
-            Mount(source="/Users/uverma/bulk-enrichment/reverse_geocode/data", target="/reverse_geocode/data", type="bind"),
+            # Mount(source="/Users/uverma/bulk-enrichment/reverse_geocode/data", target="/reverse_geocode/data", type="bind"),
             Mount(source="/Users/uverma/bulk-enrichment/samples/input", target="/samples/input", type="bind"),
             Mount(source="/Users/uverma/bulk-enrichment/samples/output", target="/samples/output", type="bind"),
         ],

@@ -17,6 +17,4 @@ COPY common/ /opt/airflow/common/
 ENV PYTHONPATH="${PYTHONPATH}:/opt/airflow"
 
 
-
-# # Run as root to make all outputs directly visible on host
  

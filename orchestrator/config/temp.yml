@@ -6,14 +6,14 @@ sequence:
   - dag_id: email_validation
     mode: "stream"
     input_topic: "enrich-input-topic"
-    out_topic: "email-validation-output-topic"
+    out_topic: "email-validation-output"
 
   - dag_id: reverse_geocode
     mode: "stream"
-    input_topic: "email-validation-output-topic"
-    out_topic: "reverse-geocode-output-topic"
+    input_topic: "email-validation-output"
+    out_topic: "reverse-geocode-output"
 
   - dag_id: gender_enrichment
     mode: "stream"
-    input_topic: "reverse-geocode-output-topic"
+    input_topic: "reverse-geocode-output"
     out_topic: "enrich-output-topic"
