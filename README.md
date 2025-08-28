@@ -64,6 +64,24 @@ Input File Specification
 ```bash
 docker-compose up -d
 ```
+URL For MINIO:-localhost:9001
+username - minioadmin
+password - minioadmin
+URL For Airflow:-localhost:8000
+username - admin
+password - admin
+(If user dosent exist please create a airflow user with your username and password)
+with the following script
+```bash
+airflow db upgrade &&
+        airflow users create \
+          --username admin \
+          --password admin \
+          --firstname Admin \
+          --lastname User \
+          --role Admin \
+          --email admin@example.com || true
+```
 
 2. **Enter Kafka container**  
 
