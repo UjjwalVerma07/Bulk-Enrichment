@@ -16,7 +16,6 @@ DEFAULT_OUT_BUCKET = "enriched"
 DEFAULT_OUT_KEY = "reverse_geocode_enriched.csv"
 
 def send_status(stage, status, error=None):
-    """Send status to Kafka + S3 progress."""
     event = {
         "stage": stage,
         "status": status,

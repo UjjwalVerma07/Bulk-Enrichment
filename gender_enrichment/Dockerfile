@@ -1,18 +1,4 @@
-# FROM apache/airflow:2.9.2
 
-# USER root
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#     && rm -rf /var/lib/apt/lists/*
-
-# COPY gender_enrichment/requirements.txt /requirements.txt
-# USER airflow
-# RUN pip install --no-cache-dir -r /requirements.txt
-
-# COPY gender_enrichment/dags/ /opt/airflow/dags/gender_enrichment/
-# COPY gender_enrichment/data/ /gender_enrichment/data/
-# COPY common/libs/ /opt/airflow/common/libs/
-
-# USER airflow
 FROM apache/airflow:2.9.2
 
 USER root

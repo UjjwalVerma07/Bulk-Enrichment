@@ -18,7 +18,7 @@ def get_producer(retries=5, delay=2):
             )
             return producer
         except NoBrokersAvailable:
-            print(f"Kafka not ready, retrying in {delay}s... ({i+1}/{retries})")
+            print(f"Kafka not ready, retrying ")
             time.sleep(delay)
     raise NoBrokersAvailable(f"Could not connect to Kafka broker at {KAFKA_BROKER}")
 
