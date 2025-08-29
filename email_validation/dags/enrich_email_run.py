@@ -14,6 +14,7 @@ DEFAULT_INPUT_BUCKET="raw"
 DEFAULT_INPUT_KEY="customer_raw.csv"
 DEFAULT_OUT_BUCKET="enriched"
 DEFAULT_OUT_KEY="email_validated.csv"
+CAP_SIZE=5
 
 
 def send_status(stage, status, error=None):
@@ -37,6 +38,24 @@ def run_email_validation_stream(topic="email-validation-input", out_topic="email
                 continue
             if isinstance(records, dict):
                 records = [records]
+            print(f"Received {len(records)} records from {topic}")
+            
+            if len(records)>CAP_SIZE:
+                print(f"CAP Size exceeded switching back to batch mode")
+                df=pd.DataFrame(records)
+                df.to_csv(LOCAL_INPUT,index=False)
+                try:
+                    subprocess.run(
+                        ["/opt/airflow/dags/email_validation/scripts/run_validator.sh", LOCAL_INPUT, LOCAL_OUTPUT],
+                        check=True
+                    )
+                except subprocess.CalledProcessError as e:
+                    send_status("email_validation", "Failed", error=str(e))
+                    print(f"C++ Validator failed: {str(e)}")
+                    continue
+                s3_utils.upload_file(DEFAULT_OUT_BUCKET,DEFAULT_OUT_KEY,LOCAL_OUTPUT)
+                send_status("email_validation","Succeeded(batch_fallback)")
+                return
 
             df = pd.DataFrame(records)
             if df.empty:
@@ -64,7 +83,9 @@ def run_email_validation_stream(topic="email-validation-input", out_topic="email
                 validated_records = validated_df.to_dict(orient="records")
 
                 if validated_records:
-                    kafka_utils.send_event(out_topic, validated_records)
+                    # kafka_utils.send_event(out_topic, validated_records)
+                    for record in validated_df.to_dict(orient="records"):
+                        kafka_utils.send_event(out_topic, record)
                     send_status("email_validation", "Succeeded")
 
                 # cleanup

@@ -1,11 +1,14 @@
 
 
 from datetime import datetime
+import os
+import tempfile
 from airflow import DAG
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator, BranchPythonOperator
 from kafka import KafkaConsumer
 import yaml, json, time
+from common.libs import kafka_utils,s3_utils,progress
 
 
 def fetch_pipeline_config(ti, **kwargs):
@@ -138,6 +141,31 @@ def run_batch_pipeline(ti, **kwargs):
 
         prev_bucket, prev_key = step['out_bucket'], step['out_key']
 
+CAP_SIZE=5
+import uuid
+def count_kafka_message(topic):
+    from kafka import KafkaConsumer
+    consumer=KafkaConsumer(
+        topic,
+        bootstrap_servers=['kafka:9092'],
+        auto_offset_reset="latest",
+        enable_auto_commit=True,
+        group_id="enrich-consumer",
+        consumer_timeout_ms=5000,
+        value_deserializer=lambda x: json.loads(x.decode("utf-8"))
+    )
+    count=0
+    record=0
+    for message in consumer:
+        record=message.value
+        break
+    consumer.close()
+    if isinstance(record,dict):
+        record=[record]
+    count=len(record)
+    return count,record
+
+
 
 def run_stream_pipeline(ti, **kwargs):
     """Trigger stream DAGs sequentially based on Kafka config."""
@@ -150,22 +178,69 @@ def run_stream_pipeline(ti, **kwargs):
             {"dag_id": "reverse_geocode", "input_topic": "email-validation-output", "out_topic": "reverse-geocode-output"},
             {"dag_id": "gender_enrichment", "input_topic": "reverse-geocode-output", "out_topic": "enrich-output-topic"},
         ]
+    
 
-    from airflow.api.common.experimental.trigger_dag import trigger_dag
-    from datetime import datetime
+    #Here will write the logic for the switchin between the real_time and Batch
+    main_topic=stream_sequence[0].get("input_topic","enrich-input-topic")
+    message_count,records=count_kafka_message(main_topic)
+    print(f"Message count in topic '{main_topic}:{message_count} ")
 
-    for step in stream_sequence:
-        dag_id = f"{step['dag_id']}_dag"
-        print(f"[STREAM] Triggering DAG: {dag_id}")
+    if message_count>CAP_SIZE:
+        print(f"Message count {message_count} exceeds {CAP_SIZE}, switching to batch processing.")
+        #Here we will load the defaul pipeline.yaml file
+        with open("/opt/airflow/dags/config/pipeline.yml","r") as f:
+            batch_config=yaml.safe_load(f)
+        
+        batch_sequence=batch_config.get("sequence",[])
+        prev_bucket=batch_config.get("input_bucket","raw")
+        prev_key=batch_config.get("input_key","customer_raw.csv")
+        from airflow.api.common.experimental.trigger_dag import trigger_dag
+        from datetime import datetime
+        import pandas as pd
 
-        trigger_and_wait(
-            dag_id=dag_id,
-            conf={
+        #we have to create a extra file for the data we are getting from kafka topic and passed it as config
+        df=pd.DataFrame(records)
+        temp_file=tempfile.NamedTemporaryFile(suffix=".csv",delete=False)
+        local_input_path=temp_file.name
+        temp_file.close()
+        df.to_csv(local_input_path,index=False)
+        s3_utils.upload_file("raw","kafka_data.csv",local_input_path)
+        os.remove(local_input_path)
+        prev_key="kafka_data.csv"
+        
+        
+
+        for step in batch_sequence:
+            dag_id=f"{step['dag_id']}_dag"
+            print(f"[BATCH-FALLBACK] TRIGGERING DAG: {dag_id}")
+            trigger_and_wait(
+                dag_id=dag_id,
+                conf={
+                    "input_bucket":prev_bucket,
+                    "input_key":prev_key,
+                    "out_bucket":step["out_bucket"],
+                    "out_key":step["out_key"]
+                }
+            )
+            prev_bucket,prev_key=step["out_bucket"],step["out_key"]
+        print("Batch processing [FALLBACK] completed.")
+    
+    else:
+        from airflow.api.common.experimental.trigger_dag import trigger_dag
+        from datetime import datetime
+
+        for step in stream_sequence:
+            dag_id = f"{step['dag_id']}_dag"
+            print(f"[STREAM] Triggering DAG: {dag_id}")
+
+            trigger_and_wait(
+                dag_id=dag_id,
+                conf={
                 "mode": "stream",
                 "input_topic": step["input_topic"],
                 "out_topic": step["out_topic"]
-            }
-        )
+                }
+            )
 
 
 with DAG(

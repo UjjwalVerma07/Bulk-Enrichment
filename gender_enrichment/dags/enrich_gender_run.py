@@ -15,6 +15,7 @@ DEFAULT_INPUT_BUCKET="raw"
 DEFAULT_INPUT_KEY="customer_raw.csv"
 DEFAULT_OUT_BUCKET="enriched"
 DEFAULT_OUT_KEY="gender_enriched.csv"
+CAP_SIZE=5
 
 def send_status(stage, status, error=None):
     """Send status to Kafka + S3 progress."""
@@ -40,13 +41,25 @@ def real_enrich_gender(topic="gender-enrich-input",out_topic="gender-enrich-outp
                 continue
             if isinstance(records,dict): 
                 records=[records]
-                
-            df=pd.DataFrame(records)
-            merged_df=pd.merge(df,gender_master_df,on="name",how="left")
-            merged_df.fillna({"gender":"UNKNOWN"},inplace=True)
-
-            enriched_records=merged_df.to_dict(orient="records")
-            kafka_utils.send_event(out_topic,enriched_records)
+            print(f"Received {len(records)} records from {topic}")
+            if len(records)>CAP_SIZE:
+                print(f"CAP Size exceeded switching back to batch mode")
+                df=pd.DataFrame(records)
+                merged_df=pd.merge(df,gender_master_df,on="name",how="left")
+                merged_df.fillna({"gender":"UNKNOWN"},inplace=True)
+                merged_df.to_csv(LOCAL_OUTPUT,index=False)
+                s3_utils.upload_file(DEFAULT_OUT_BUCKET,DEFAULT_OUT_KEY,LOCAL_OUTPUT)
+                send_status("gender-enrichment","Succeeded(batch_fallback)")
+                return
+            
+            else:
+                df=pd.DataFrame(records)
+                merged_df=pd.merge(df,gender_master_df,on="name",how="left")
+                merged_df.fillna({"gender":"UNKNOWN"},inplace=True)
+                enriched_records=merged_df.to_dict(orient="records")
+            # kafka_utils.send_event(out_topic,enriched_records)
+                for record in merged_df.to_dict(orient="records"):
+                        kafka_utils.send_event(out_topic, record)
         send_status("gender-enrichment","Succeeded")
     except Exception as e:
         send_status("gender-enrichment","Failed",error=str(e))

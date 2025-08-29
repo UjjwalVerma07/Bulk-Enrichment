@@ -26,6 +26,10 @@ def create_input_csv():
         f.write("4,Divya,divya@example.com.,13.0827,80.2707\n")
         f.write("5,Sohan,sohan@example.com,22.5726,88.3639\n")
         f.write("6,Kiran,kiran@example.com,28.7041,77.1025\n")
+        f.write("7,Priya,priya@example.com,17.3850,78.4867\n")
+        f.write("8,Arjun,arjun@example.com,23.2599,77.4126\n")
+        f.write("9,Anita,anita@example.com,26.9124,75.7873\n")
+        f.write("10,Rahul,rahul@example.com,15.3173,75.7139\n")
     print(f"Sample input CSV created at {LOCAL_INPUT}")
 
 
@@ -42,6 +46,11 @@ def create_geo_master_csv():
         f.write("12.9716,77.5946,Bangalore\n")
         f.write("13.0827,80.2707,Chennai\n")
         f.write("22.5726,88.3639,Kolkata\n")
+        f.write("17.3850,78.4867,Hyderabad\n")
+        f.write("23.2599,77.4126,Bhopal\n")
+        f.write("26.9124,75.7873,Jaipur\n")
+        f.write("15.3173,75.7139,Belgaum\n")
+        f.write("21.1458,79.0882,Nagpur\n")
     print(f"Geo master CSV created at {LOCAL_GEO_MASTER}")
 
 
@@ -59,6 +68,10 @@ def create_gender_master_csv():
         f.write("Divya,F\n")
         f.write("Sohan,M\n")
         f.write("Kiran,F\n")
+        f.write("Priya,F\n")
+        f.write("Arjun,M\n")
+        f.write("Anita,F\n")
+        f.write("Rahul,M\n")
     print(f"Gender master CSV created at {LOCAL_GENDER_MASTER}")
 
 def upload_gender_master_csv():

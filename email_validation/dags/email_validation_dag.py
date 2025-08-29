@@ -43,7 +43,7 @@ with DAG(
         auto_remove=True,
         command="python /opt/airflow/dags/email_validation/enrich_email_run.py",
         docker_url="unix://var/run/docker.sock",
-        network_mode="bulk-enrichment_airflow_network",
+        network_mode="final-bulk-enrichment-v2_airflow_network",
         environment={
             "KAFKA_BROKER": "kafka:9092",
             "S3_ENDPOINT": "http://minio:9000",
@@ -58,6 +58,7 @@ with DAG(
         Mount(source="/Users/uverma/bulk-enrichment/samples/input", target="/samples/input", type="bind"),
         Mount(source="/Users/uverma/bulk-enrichment/samples/output", target="/samples/output", type="bind"),
     ],
+    mount_tmp_dir=False
 
     )
 
@@ -68,7 +69,7 @@ with DAG(
         auto_remove=True,
         command="python /opt/airflow/dags/email_validation/enrich_email_run.py",
         docker_url="unix://var/run/docker.sock",
-        network_mode="bulk-enrichment_airflow_network",
+        network_mode="final-bulk-enrichment-v2_airflow_network",
         environment={
             "MODE": "{{ dag_run.conf.get('mode', params.mode) }}",
             "KAFKA_BROKER": "kafka:9092",

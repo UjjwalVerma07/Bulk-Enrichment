@@ -14,6 +14,7 @@ DEFAULT_INPUT_BUCKET = "raw"
 DEFAULT_INPUT_KEY = "customer_raw.csv"
 DEFAULT_OUT_BUCKET = "enriched"
 DEFAULT_OUT_KEY = "reverse_geocode_enriched.csv"
+CAP_SIZE=5
 
 def send_status(stage, status, error=None):
     event = {
@@ -37,13 +38,27 @@ def run_reverse_geocode_stream(topic="reverse-geocode-input",out_topic="reverse-
                 continue
             if isinstance(records,dict):
                 records=[records]
-            df=pd.DataFrame(records)
+            print(f"Received {len(records)} records from {topic}")
+            
 
-            merged_df=pd.merge(df,geo_master_df,how="left",on=["latitude","longitude"])
-            merged_df.fillna({"city":"Unknown"},inplace=True)
+            if len(records)>CAP_SIZE:
+                print(f"CAP Size exceeded switching back to batch mode")
+                df=pd.DataFrame(records)
+                merged_df=pd.merge(df,geo_master_df,how="left",on=["latitude","longitude"])
+                merged_df.fillna({"city":"Unknown"},inplace=True)
+                merged_df.to_csv(LOCAL_OUTPUT,index=False)
+                s3_utils.upload_file(DEFAULT_OUT_BUCKET,DEFAULT_OUT_KEY,LOCAL_OUTPUT)
+                send_status("reverse_geocode","Succeeded(batch_fallback)")
+                return
+            else:
+                df=pd.DataFrame(records)
+                merged_df=pd.merge(df,geo_master_df,how="left",on=["latitude","longitude"])
+                merged_df.fillna({"city":"Unknown"},inplace=True)
 
-            enriched_records=merged_df.to_dict(orient="records")
-            kafka_utils.send_event(out_topic,enriched_records)
+                enriched_records=merged_df.to_dict(orient="records")
+            # kafka_utils.send_event(out_topic,enriched_records)
+                for record in merged_df.to_dict(orient="records"):
+                        kafka_utils.send_event(out_topic, record)
 
         send_status("reverse_geocode","Succeeded")
     except Exception as e:

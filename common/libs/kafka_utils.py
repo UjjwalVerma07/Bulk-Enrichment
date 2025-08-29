@@ -36,6 +36,7 @@ def consume_records(topic:str):
         auto_offset_reset="earliest",
         # auto_offset_reset="latest",
         # group_id=f"consumer_{uuid.uuid4()}",
+        # group_id="my_consumer_group",
         enable_auto_commit=True,
         value_deserializer=lambda x: json.loads(x.decode("utf-8")),
         consumer_timeout_ms=5000
