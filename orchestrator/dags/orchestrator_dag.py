@@ -11,7 +11,7 @@ import yaml, json, time
 from common.libs import kafka_utils,s3_utils,progress
 
 
-def fetch_pipeline_config(ti, **kwargs):
+def fetch_pipeline_config(ti):
     try:
         consumer = KafkaConsumer(
             "pipeline-config",
@@ -49,7 +49,7 @@ def fetch_pipeline_config(ti, **kwargs):
 
 
 
-def choose_mode(ti, **kwargs):
+def choose_mode(ti):
     config = ti.xcom_pull(key="pipeline_config", task_ids="fetch_pipeline_config")
     mode = (config.get("mode") or "batch").lower()
     print(f"Orchestrator mode chosen: {mode}")
@@ -61,7 +61,7 @@ def choose_mode(ti, **kwargs):
         return "end"
 
 import uuid;
-def wait_for_kafka_data(ti, **kwargs):
+def wait_for_kafka_data(ti):
     config = ti.xcom_pull(task_ids='fetch_pipeline_config', key='pipeline_config')
     input_topic = config.get("main_input_topic", "enrich-input-topic")
     # group_id = f"orchestrator_waiter_{uuid.uuid4()}"
@@ -115,7 +115,7 @@ def trigger_and_wait(dag_id, conf):
         time.sleep(10)
 
 
-def run_batch_pipeline(ti, **kwargs):
+def run_batch_pipeline(ti):
     """Trigger batch DAGs sequentially based on Kafka config."""
     config = ti.xcom_pull(task_ids="fetch_pipeline_config", key="pipeline_config")
     sequence = config.get("sequence", [])
@@ -167,7 +167,7 @@ def count_kafka_message(topic):
 
 
 
-def run_stream_pipeline(ti, **kwargs):
+def run_stream_pipeline(ti):
     """Trigger stream DAGs sequentially based on Kafka config."""
     config = ti.xcom_pull(task_ids="fetch_pipeline_config", key="pipeline_config")
     stream_sequence = config.get("stream_sequence", [])

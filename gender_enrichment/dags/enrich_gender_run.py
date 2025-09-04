@@ -69,17 +69,8 @@ def real_enrich_gender(topic="gender-enrich-input",out_topic="gender-enrich-outp
 
 
 def enrich_gender(input_bucket=DEFAULT_INPUT_BUCKET,input_key=DEFAULT_INPUT_KEY,out_bucket=DEFAULT_OUT_BUCKET,out_key=DEFAULT_OUT_KEY):  
-    kafka_utils.send_event("pipeline-progress",{
-        "stage":"gender_enrichment",
-        "status":"Started",
-        "time":datetime.now().isoformat()
-    })
-    progress.upload_progress_file(BUCKET,"progress",{
-        "stage":"gender_enrichment",
-        "status":"Started",
-        "time":datetime.now().isoformat()
-    })
 
+    send_status("gender-enrichment","Started")
     try:
     #Step1 - download the inputfile
         local_input=LOCAL_INPUT
@@ -99,30 +90,10 @@ def enrich_gender(input_bucket=DEFAULT_INPUT_BUCKET,input_key=DEFAULT_INPUT_KEY,
 
     #Step6-Upload the output file
         s3_utils.upload_file(out_bucket,out_key,local_output)
-    #Step7- Send Message to kafka and update the progress file
-
-        kafka_utils.send_event("pipeline-progress",{
-            "stage":"gender_enrichment",
-            "status":"Succeeded",
-            "date":datetime.now().isoformat()
-            })
-
-        progress.upload_progress_file(BUCKET,"progress",{
-            "stage":"gender_enrichment",
-            "status":"Succeeded",
-            "date":datetime.now().isoformat()
-            })
+        send_status("gender-enrichment","Succeeded")
     except Exception as e:
-        kafka_utils.send_event("pipeline-progress",{
-            "stage":"gender_enrichment",
-            "status":"Failed",
-            "date":datetime.now().isoformat()
-        })
-        progress.upload_progress_file(BUCKET,"progress",{
-            "stage":"gender_enrichment",
-            "status":"Failed",
-            "date":datetime.now().isoformat()
-        })
+        error_msg=str(e)
+        send_status("gender-enrichment","Failed",error=error_msg)
 
     
  

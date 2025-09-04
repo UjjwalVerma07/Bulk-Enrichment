@@ -101,16 +101,8 @@ def run_email_validation_stream(topic="email-validation-input", out_topic="email
 
 
 def validate_emails(input_bucket=DEFAULT_INPUT_BUCKET,input_key=DEFAULT_INPUT_KEY,out_bucket=DEFAULT_OUT_BUCKET,out_key=DEFAULT_OUT_KEY):
-    kafka_utils.send_event("pipeline-progress",{
-        "stage":"email_validation",
-        "status":"Started",
-        "time":datetime.now().isoformat(),
-    })
-    progress.upload_progress_file(BUCKET,"progress",{
-        "stage":"email_validation",
-        "status":"Started",
-        "time":datetime.now().isoformat()
-    })
+    
+    send_status("email_validation","Started")
     
     try:
 
@@ -131,27 +123,10 @@ def validate_emails(input_bucket=DEFAULT_INPUT_BUCKET,input_key=DEFAULT_INPUT_KE
     
     #Step4:- Upload the output file backe to s3    
         s3_utils.upload_file(out_bucket,out_key,local_output)
-        kafka_utils.send_event("pipeline-progress",{
-            "stage":"email_validation",
-            "status":"Succeeded",
-            "time":datetime.now().isoformat()
-        })
-        progress.upload_progress_file(BUCKET,"progress",{
-            "stage":"email_validation",
-            "status":"Succeeded",
-            "time":datetime.now().isoformat()
-        })
+        send_status("email_validation","Succeeded")
     except Exception as e:
-        kafka_utils.send_event("pipeline-progress",{
-            "stage":"email_validation",
-            "status":"Failed",
-            "time":datetime.now().isoformat()
-        })
-        progress.upload_progress_file(BUCKET,"progress",{
-            "stage":"email_validation",
-            "status":"Failed",
-            "time":datetime.now().isoformat()
-        })
+        error_msg=str(e)
+        send_status("email_validation","Failed",error=error_msg)
 
 if __name__=="__main__":
     mode=os.environ.get("MODE","batch").lower()

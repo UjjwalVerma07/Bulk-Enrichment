@@ -69,17 +69,8 @@ def run_reverse_geocode_stream(topic="reverse-geocode-input",out_topic="reverse-
 
 
 def run_reverse_geocode(input_bucket=DEFAULT_INPUT_BUCKET, input_key=DEFAULT_INPUT_KEY, out_bucket=DEFAULT_OUT_BUCKET, out_key=DEFAULT_OUT_KEY):
-
-    kafka_utils.send_event("pipeline-progress",{
-        "stage":"reverse_geocode",
-        "status":"Started",
-        "time":datetime.now().isoformat()
-    })
-    progress.upload_progress_file(BUCKET,"progress",{
-        "stage":"reverse_geocode",
-        "status":"Started",
-        "time":datetime.now().isoformat()
-    })
+    
+    send_status("reverse_geocode","Started")
  
     try:
         # Step 1 - Download the input file 
@@ -99,33 +90,11 @@ def run_reverse_geocode(input_bucket=DEFAULT_INPUT_BUCKET, input_key=DEFAULT_INP
 
         # Upload output
         s3_utils.upload_file(out_bucket, out_key, LOCAL_OUTPUT)
-
-        # Send success messages
-        kafka_utils.send_event("pipeline-progress",{
-            "stage":"reverse_geocode",
-            "status":"Succeeded",
-            "time":datetime.now().isoformat()
-        })
-        progress.upload_progress_file(BUCKET,"progress",{
-            "stage":"reverse_geocode",
-            "status":"Succeeded",
-            "time":datetime.now().isoformat()
-        })
+        send_status("reverse_geocode","Succeeded")
 
     except Exception as e:
         error_msg = str(e)
-        kafka_utils.send_event("pipeline-progress",{
-            "stage":"reverse_geocode",
-            "status":"Failed",
-            "time":datetime.now().isoformat(),
-            "error": error_msg
-        })
-        progress.upload_progress_file(BUCKET,"progress",{
-            "stage":"reverse_geocode",
-            "status":"Failed",
-            "time":datetime.now().isoformat(),
-            "error": error_msg
-        })
+        send_status("reverse_geocode","Failed",error=error_msg)
         print(f"ERROR in Downloading Input File: {error_msg}")
         sys.exit(1)
  
