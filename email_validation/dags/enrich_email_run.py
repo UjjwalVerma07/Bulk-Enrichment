@@ -103,6 +103,7 @@ def run_email_validation_stream(topic="email-validation-input", out_topic="email
 def validate_emails(input_bucket=DEFAULT_INPUT_BUCKET,input_key=DEFAULT_INPUT_KEY,out_bucket=DEFAULT_OUT_BUCKET,out_key=DEFAULT_OUT_KEY):
     
     send_status("email_validation","Started")
+    print(f"InputBucket:{input_bucket} , Input_key:{input_key} , OutputBucket:{out_bucket} , OutputKey:{out_key}")
     
     try:
 
@@ -127,6 +128,7 @@ def validate_emails(input_bucket=DEFAULT_INPUT_BUCKET,input_key=DEFAULT_INPUT_KE
     except Exception as e:
         error_msg=str(e)
         send_status("email_validation","Failed",error=error_msg)
+        raise
 
 if __name__=="__main__":
     mode=os.environ.get("MODE","batch").lower()

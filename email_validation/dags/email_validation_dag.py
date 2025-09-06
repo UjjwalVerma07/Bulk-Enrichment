@@ -33,7 +33,8 @@ with DAG(
         "out_key": DEFAULT_OUT_KEY,
         "input_topic":DEFAULT_INPUT_TOPIC,
         "output_topic":DEFAULT_OUTPUT_TOPIC
-    }
+    },
+    max_active_runs=5
 )as dag:
     start=EmptyOperator(task_id="start")
     email_validation_task=DockerOperator(

@@ -4,7 +4,6 @@ import sys
 import pandas as pd
 from datetime import datetime
 from common.libs import s3_utils, progress, kafka_utils
-
 BUCKET = "raw"
 LOCAL_INPUT = "/samples/input/reverse_geocode.csv"
 LOCAL_OUTPUT = "/samples/output/reverse_geocode_enriched.csv"
@@ -40,7 +39,6 @@ def run_reverse_geocode_stream(topic="reverse-geocode-input",out_topic="reverse-
                 records=[records]
             print(f"Received {len(records)} records from {topic}")
             
-
             if len(records)>CAP_SIZE:
                 print(f"CAP Size exceeded switching back to batch mode")
                 df=pd.DataFrame(records)
@@ -64,13 +62,14 @@ def run_reverse_geocode_stream(topic="reverse-geocode-input",out_topic="reverse-
     except Exception as e:
         send_status("reverse_geocode","Failed",error=str(e))
         print(f"Error in Processing Stream:{str(e)}")
-        sys.exit(1)
+        raise
 
 
 
 def run_reverse_geocode(input_bucket=DEFAULT_INPUT_BUCKET, input_key=DEFAULT_INPUT_KEY, out_bucket=DEFAULT_OUT_BUCKET, out_key=DEFAULT_OUT_KEY):
     
     send_status("reverse_geocode","Started")
+    print(f"InputBucket:{input_bucket} , Input_key:{input_key} , OutputBucket:{out_bucket} , OutputKey:{out_key}")
  
     try:
         # Step 1 - Download the input file 
@@ -88,6 +87,8 @@ def run_reverse_geocode(input_bucket=DEFAULT_INPUT_BUCKET, input_key=DEFAULT_INP
         merged_df.fillna({"city":"Unknown"}, inplace=True)
         merged_df.to_csv(LOCAL_OUTPUT, index=False)
 
+
+        print(f"Using Variables in Airflow : {CAP_SIZE}")
         # Upload output
         s3_utils.upload_file(out_bucket, out_key, LOCAL_OUTPUT)
         send_status("reverse_geocode","Succeeded")
@@ -96,7 +97,7 @@ def run_reverse_geocode(input_bucket=DEFAULT_INPUT_BUCKET, input_key=DEFAULT_INP
         error_msg = str(e)
         send_status("reverse_geocode","Failed",error=error_msg)
         print(f"ERROR in Downloading Input File: {error_msg}")
-        sys.exit(1)
+        raise
  
 if __name__ == "__main__":
     mode = os.environ.get("MODE", "batch").lower()

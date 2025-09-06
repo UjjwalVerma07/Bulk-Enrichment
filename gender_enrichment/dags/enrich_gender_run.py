@@ -71,6 +71,7 @@ def real_enrich_gender(topic="gender-enrich-input",out_topic="gender-enrich-outp
 def enrich_gender(input_bucket=DEFAULT_INPUT_BUCKET,input_key=DEFAULT_INPUT_KEY,out_bucket=DEFAULT_OUT_BUCKET,out_key=DEFAULT_OUT_KEY):  
 
     send_status("gender-enrichment","Started")
+    print(f"InputBucket:{input_bucket} , Input_key:{input_key} , OutputBucket:{out_bucket} , OutputKey:{out_key}")
     try:
     #Step1 - download the inputfile
         local_input=LOCAL_INPUT
@@ -94,6 +95,7 @@ def enrich_gender(input_bucket=DEFAULT_INPUT_BUCKET,input_key=DEFAULT_INPUT_KEY,
     except Exception as e:
         error_msg=str(e)
         send_status("gender-enrichment","Failed",error=error_msg)
+        raise
 
     
  

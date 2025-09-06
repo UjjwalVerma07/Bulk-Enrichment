@@ -8,6 +8,8 @@ from common.libs import s3_utils,kafka_utils,progress
 from datetime import datetime
 import subprocess
 import pandas as pd,os,tempfile,json
+from airflow.models import Variable
+
 
 BUCKET = "raw"
 LOCAL_INPUT="/samples/input/reverse_geocode.csv"
@@ -35,7 +37,8 @@ with DAG(
         "out_key": DEFAULT_OUT_KEY,
         "input_topic":DEFAULT_INPUT_TOPIC,
         "output_topic":DEFAULT_OUTPUT_TOPIC
-    }
+    },
+    max_active_runs=5
 ) as dag:
     
     start=EmptyOperator(task_id="start")
