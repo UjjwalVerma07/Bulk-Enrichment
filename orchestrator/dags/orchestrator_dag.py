@@ -301,6 +301,7 @@ from airflow.operators.python import PythonOperator, BranchPythonOperator
 from kafka import KafkaConsumer
 import yaml, json, time
 from common.libs import kafka_utils,s3_utils,progress
+from airflow.decorators import task
 
 
 def fetch_pipeline_config(ti):
@@ -343,7 +344,10 @@ def fetch_pipeline_config(ti):
 
 def choose_mode(ti):
     config = ti.xcom_pull(key="pipeline_config", task_ids="fetch_pipeline_config")
-    mode = (config.get("mode") or "batch").lower()
+    pipelines=config.get("pipelines",[])
+    if not pipelines:
+        return "end"
+    mode=pipelines[0].get("mode","batch").lower()
     print(f"Orchestrator mode chosen: {mode}")
     if mode == "batch":
         return "batch_start"
@@ -353,31 +357,41 @@ def choose_mode(ti):
         return "end"
 
 import uuid;
-def wait_for_kafka_data(ti):
-    config = ti.xcom_pull(task_ids='fetch_pipeline_config', key='pipeline_config')
-    input_topic = config.get("main_input_topic", "enrich-input-topic")
-    # group_id = f"orchestrator_waiter_{uuid.uuid4()}"
-    while True:
-        consumer = KafkaConsumer(
-            input_topic,
-            bootstrap_servers=['kafka:9092'],
-            # auto_offset_reset="earliest",
-            auto_offset_reset="latest",
-            enable_auto_commit=True,
-            group_id="orchestrator_waiter",
-            # group_id=group_id,
-            consumer_timeout_ms=5000
-        )
-        data_found = False
-        for _ in consumer:
+from kafka import KafkaConsumer
+import time
+import json
+
+@task
+def wait_for_kafka_data(pipeline: dict):
+    input_topic = pipeline.get("main_input_topic", "enrich-input-topic")
+    # Stable group_id derived from pipeline_id
+    group_id = f"orchestrator_waiter_{pipeline.get('pipeline_id', 'default')}"
+
+    consumer = KafkaConsumer(
+        input_topic,
+        bootstrap_servers=['kafka:9092'],
+        auto_offset_reset="latest",  # "earliest" if you want old messages
+        enable_auto_commit=True,
+        group_id=group_id,
+        consumer_timeout_ms=5000,
+        value_deserializer=lambda x: json.loads(x.decode("utf-8"))
+    )
+    print(f"Waiting for data in topic '{input_topic}' with group_id '{group_id}'...")
+
+    data_found = False
+    while not data_found:
+        records = consumer.poll(timeout_ms=5000)
+        if records:
             data_found = True
+            print(f"Data found in topic '{input_topic}'!")
             break
-        consumer.close()
-        if data_found:
-            print(f"Data found in Kafka topic '{input_topic}', proceeding...")
-            break
-        print(f"No data yet in Kafka topic '{input_topic}', sleeping 5 seconds...")
+        print(f"No data yet in topic '{input_topic}', sleeping 5s...")
         time.sleep(5)
+
+    consumer.close()
+    return pipeline
+
+
 
 
 
@@ -408,66 +422,19 @@ def trigger_and_wait(dag_id, conf):
 
 
 
-def run_single_pipeline(pipeline: dict):
-    """Run one pipeline sequentially."""
-    prev_bucket = pipeline.get("input_bucket", "raw")
-    prev_key = pipeline.get("input_key", "customer_raw.csv")
-    sequence = pipeline.get("sequence", [])
-
-    for step in sequence:
-        dag_id = f"{step['dag_id']}_dag"
-        print(f"[BATCH] Triggering DAG: {dag_id}")
-
-        trigger_and_wait(
-            dag_id=dag_id,
-            conf={
-                "input_bucket": prev_bucket,
-                "input_key": prev_key,
-                "out_bucket": step["out_bucket"],
-                "out_key": step["out_key"]
-            }
-        )
-        prev_bucket, prev_key = step['out_bucket'], step['out_key']
-
-
-
-def run_batch_pipeline(ti):
-    """Trigger batch DAGs sequentially based on Kafka config."""
-    config = ti.xcom_pull(task_ids="fetch_pipeline_config", key="pipeline_config")
-    sequence = config.get("sequence", [])
-    prev_bucket = config.get("input_bucket", "raw")
-    prev_key = config.get("input_key", "customer_raw.csv")
-
-    from airflow.api.common.experimental.trigger_dag import trigger_dag
-    from datetime import datetime
-
-    for step in sequence:
-        dag_id = f"{step['dag_id']}_dag"
-        print(f"[BATCH] Triggering DAG: {dag_id}")
-
-        trigger_and_wait(
-            dag_id=dag_id,
-            conf={
-                "input_bucket": prev_bucket,
-                "input_key": prev_key,
-                "out_bucket": step['out_bucket'],
-                "out_key": step['out_key']
-            },
-        )
-
-        prev_bucket, prev_key = step['out_bucket'], step['out_key']
-
 CAP_SIZE=5
 import uuid
 def count_kafka_message(topic):
     from kafka import KafkaConsumer
+    group_id = f"enrich-consumer-{uuid.uuid4()}"
     consumer=KafkaConsumer(
         topic,
         bootstrap_servers=['kafka:9092'],
-        auto_offset_reset="latest",
-        enable_auto_commit=True,
+        auto_offset_reset="earliest",
+        # enable_auto_commit=True,
+        enable_auto_commit=False,
         group_id="enrich-consumer",
-        consumer_timeout_ms=5000,
+        consumer_timeout_ms=10000,
         value_deserializer=lambda x: json.loads(x.decode("utf-8"))
     )
     count=0
@@ -482,11 +449,10 @@ def count_kafka_message(topic):
     return count,record
 
 
+@task
+def run_stream_pipeline(pipeline:dict):
 
-def run_stream_pipeline(ti):
-    """Trigger stream DAGs sequentially based on Kafka config."""
-    config = ti.xcom_pull(task_ids="fetch_pipeline_config", key="pipeline_config")
-    stream_sequence = config.get("stream_sequence", [])
+    stream_sequence = pipeline.get("sequence", [])
 
     if not stream_sequence:
         # fallback to default stream sequence if not in config
@@ -558,6 +524,9 @@ def run_stream_pipeline(ti):
                 "out_topic": step["out_topic"]
                 }
             )
+
+
+ 
 from airflow.decorators import task
 @task
 def run_single_pipeline(pipeline: dict):
@@ -582,7 +551,27 @@ def run_single_pipeline(pipeline: dict):
         )
         prev_bucket, prev_key = step['out_bucket'], step['out_key']
 
+def extract_real_pipelines(ti):
+    config=ti.xcom_pull(task_ids="fetch_pipeline_config",key="pipeline_config")
 
+    if config is None:
+        raise ValueError("No config foudn in XCom from fetch_pipeline_config")
+    pipelines=config.get("pipelines",[])
+    if not pipelines:
+        raise ValueError("No pipelines found in config!")
+    extracted=[]
+    for idx,pipeline in enumerate(pipelines,start=1):
+        extracted.append({
+            "pipeline_id":f"pipeline_{idx}",
+            "mode":pipeline.get("mode","stream"),
+            "main_input_topic":pipeline.get("main_input_topic","enrich-input-topic"),
+            "main_out_topic":pipeline.get("main_out_topic","enrich-output-topic"),
+            "sequence":pipeline.get("sequence",[])
+        })
+    print("Extracted Pipelines:",json.dumps(extracted,indent=2))
+    return extracted
+
+#This is for Extracting the Batch Pipelines
 def extract_pipelines(ti):
     """
     Extract multiple pipelines from config and return list of dicts.
@@ -601,14 +590,12 @@ def extract_pipelines(ti):
         extracted.append({
             "pipeline_id": f"pipeline_{idx}",
             "input_bucket": pipeline.get("input_bucket", "raw"),
-            "input_key": pipeline.get("input_key", f"input_{idx}.csv"),
+            "input_key": pipeline.get("input_key", "customer_raw.csv"),
             "sequence": pipeline.get("sequence", [])
         })
 
     print("Extracted Pipelines:", json.dumps(extracted, indent=2))
     return extracted
-
-
 
 with DAG(
     dag_id="orchestrator_dag",
@@ -639,26 +626,22 @@ with DAG(
         python_callable=extract_pipelines,
     )
 
-    # run_all_pipelines = PythonOperator.partial(
-    #     task_id="run_pipeline",
-    #     python_callable=run_single_pipeline,
-    # ).expand(op_args=[extract.output])
     run_all_pipelines = run_single_pipeline.expand(pipeline=extract.output)
 
 
     realtime_start = EmptyOperator(task_id="realtime_start")
-    wait_for_data = PythonOperator(
-        task_id="wait_for_kafka_data",
-        python_callable=wait_for_kafka_data
+
+    extract_real=PythonOperator(
+        task_id="extract_real_pipelines",
+        python_callable=extract_real_pipelines
     )
-    run_stream = PythonOperator(
-        task_id="run_stream_pipeline",
-        python_callable=run_stream_pipeline
-    )
+    wait_for_data=wait_for_kafka_data.expand(pipeline=extract_real.output)
+
+    run_stream=run_stream_pipeline.expand(pipeline=wait_for_data)
 
 
     start >> fetch_config >> branch
     branch >> batch_start >>extract>> run_all_pipelines >> end
-    branch >> realtime_start >> wait_for_data >> run_stream >> end
+    branch >> realtime_start >>extract_real >>  wait_for_data >> run_stream >> end
 
 
