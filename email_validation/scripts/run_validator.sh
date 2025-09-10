@@ -3,6 +3,7 @@ set -e
 
 CPP_DIR="/opt/airflow/dags/email_validation/cpp"
 CPP_FILE="$CPP_DIR/validator.cpp"
+CPP_LIB_FILE="$CPP_DIR/validator_lib.cpp"
 OUTPUT_BIN="$CPP_DIR/validator"
 
 
@@ -14,9 +15,9 @@ if [ $# -ne 2 ]; then
   exit 1
 fi
 
-if [ ! -f "$OUTPUT_BIN" ] || [ "$CPP_FILE" -nt "$OUTPUT_BIN" ]; then
+if [ ! -f "$OUTPUT_BIN" ] || [ "$CPP_FILE" -nt "$OUTPUT_BIN" ] || [ "$CPP_LIB_FILE" -nt "$OUTPUT_BIN" ]; then
   echo "Compiling validator.cpp..."
-  g++ -std=c++11 "$CPP_FILE" -o "$OUTPUT_BIN"
+  g++ -std=c++11 "$CPP_FILE" "$CPP_LIB_FILE" -o "$OUTPUT_BIN"
 fi
 
 echo "Running email validator..."
