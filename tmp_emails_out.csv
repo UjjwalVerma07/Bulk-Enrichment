@@ -1,0 +1,15 @@
+id,name,email,latitude,longitude,email_valid
+1,A,abc@gmail.com,0,0,True
+2,B,abc..xyz@gmail.com,0,0,False
+3,C,abc@gmail,0,0,False
+4,D,abc@GMAIL.COM,0,0,True
+5,E,abgmail.com,0,0,False
+6,F,a@company.org,0,0,True
+7,G,a@example.com,0,0,True
+8,H,a@unknown.org,0,0,False
+9,I,.abc@gmail.com,0,0,False
+10,J,abc.@gmail.com,0,0,False
+11,K,ab@c@gmail.com,0,0,False
+12,L,abc@yaHoo.com,0,0,True
+13,M,a@outlook.com,0,0,True
+14,N,a@company.com,0,0,False
