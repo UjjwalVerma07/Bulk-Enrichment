@@ -98,6 +98,29 @@
 // }
 
 
+
+//Email Should be Valid from the domains names that are given
+
+//Single @ Symbol Rule
+
+//No Consecutive Dot Rule
+
+//Valid Charaters in the Local Part
+
+//Length Constraints:-
+//email<=254 Characters
+//localpart<=64 Characetrs
+//Domain_part<=255 Characters
+
+//Domain Format Check:-
+//domain should Contain atlease one dot
+//Top Level Domain should be atleas 2 characters
+
+
+
+
+
+
 #include "validator.h"
 #include <iostream>
 #include <string>
@@ -107,6 +130,7 @@
 #include <vector>
 using namespace std;
 
+//Need to write the functions for the isChar also
 bool isChar(char c){
     if((c>='A' and c<='Z') || (c>='a' and c<='z')){
         return true;
@@ -114,6 +138,8 @@ bool isChar(char c){
     return false;
 }
 
+
+//Need to write the test cases for the isDigit also;
 bool isDigit(char c){
     if(c>='0' && c<='9'){
         return true;
@@ -122,7 +148,7 @@ bool isDigit(char c){
 }
 
 bool isvalid(const string &email){
-    //Check if first character is alphabet or not
+    //Checks the length of the email;
     if(email.length()==0){
         return false;
     }
@@ -133,6 +159,7 @@ bool isvalid(const string &email){
     size_t atPos=email.find('@');
     //means @ is not present in the email;
     if(atPos==string::npos)return false;
+
     //meand duplicate @ are present;
     if(email.find('@',atPos+1)!=string::npos)return false;
 
@@ -140,6 +167,8 @@ bool isvalid(const string &email){
     string domain=email.substr(atPos+1);
 
     if(local.size()==0 or domain.size()==0)return false;
+
+
      //No Consecutive Dot anywhere
     if(email.find("..")!=string::npos){
         return false;
@@ -165,9 +194,13 @@ bool isvalid(const string &email){
     if(at==-1 or dot==-1){
         return false;
     }
+
+    //This means . is coming before the @ //like ujjwalvarma6948.gmail@com
      if(at>dot){
         return false;
     }
+
+    //This means the . is coming at last or is not coming at all;
     if(dot>=email.length()-1){
         return false;
     }
@@ -187,11 +220,21 @@ bool isvalid(const string &email){
     if(lastDot==string::npos)return false;
 
     if(lastDot==domain.size()-1)return false;
+     
 
+    //To Check that the top level Domain should be atleast has a size greater than 2;
     string tld=domain.substr(lastDot+1);
     if(tld.size()<2)return false;
     if(domain.front()=='.' || domain.back()=='.')return false;
     
+
+    //Suppose Their exist ujjwalvarma6948@gmail.com
+    //local would me Local=ujjwalvarma6948
+    //Domain would be gmail.com
+    //Top Level Domain would be "com,in,org" 
+
+
+    //This tell that the domain should be from the this list of allowedDomains;
     static const unordered_set<string>allowedDomains={
         "gmail.com","yahoo.com","outlook.com","data-axle.com","example.com"
     };
@@ -201,13 +244,15 @@ bool isvalid(const string &email){
    return true;
 }
 
-
+//Need to write the test cases for the trim function also
 string trim(const string &s) {
     size_t start = s.find_first_not_of(" \t\r\n");
     size_t end = s.find_last_not_of(" \t\r\n");
     if(start == string::npos || end == string::npos) return "";
     return s.substr(start, end - start + 1);
 }
+
+
 // int main(int argc,char*argv[]){
 //     if(argc!=3){
 //         cerr<<"Usage: validator <input_csv> output_csv>";

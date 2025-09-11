@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/runTests.dir/test_validator.cpp.o -o runTests  ../libvalidator.a ../../../lib/libgtest_main.a ../../../lib/libgtest.a
