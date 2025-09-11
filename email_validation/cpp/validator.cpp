@@ -1,55 +1,58 @@
-#include<bits/stdc++.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <string_view>
 using namespace std;
 
-bool isChar(char c){
-    if((c>='A' and c<='Z') || (c>='a' and c<='z')){
-        return true;
-    }
-    return false;
+static inline bool isChar(char c){
+    return (c>='A' && c<='Z') || (c>='a' && c<='z');
 }
 
-bool isDigit(char c){
-    if(c>='0' && c<='9'){
-        return true;
+static inline string_view trim_view(string_view s){
+    size_t start = 0;
+    size_t end = s.size();
+    while(start < end){
+        char ch = s[start];
+        if(ch!=' ' && ch!='\t' && ch!='\r' && ch!='\n') break;
+        ++start;
     }
-    return false;
+    while(end > start){
+        char ch = s[end-1];
+        if(ch!=' ' && ch!='\t' && ch!='\r' && ch!='\n') break;
+        --end;
+    }
+    return s.substr(start, end - start);
 }
 
-bool isvalid(string email){
-    //Check if first character is alphabet or not
-    if(email.length()==0){
+static inline bool isvalid(string_view email){
+    if(email.empty()){
         return false;
     }
-    if(!isChar(email[0])){
+    if(!isChar(email.front())){
         return false;
     }
-    int at=-1;
-    int dot=-1;
-    for(int i=0;i<email.length();i++){
-        if(email[i]=='@'){
-            at=i;
+    int at = -1;
+    int dot = -1;
+    for(size_t i=0;i<email.size();i++){
+        char ch = email[i];
+        if(ch=='@'){
+            at = static_cast<int>(i);
+        } else if(ch=='.'){
+            dot = static_cast<int>(i);
         }
-        else if(email[i]=='.'){
-            dot=i;
-        }
     }
-    if(at==-1 or dot==-1){
+    if(at==-1 || dot==-1){
         return false;
     }
-     if(at>dot){
+    if(at>dot){
         return false;
     }
-    if(dot>=email.length()-1){
+    if(static_cast<size_t>(dot) >= email.size()-1){
         return false;
     }
     return true;
 }
-string trim(const string &s) {
-    size_t start = s.find_first_not_of(" \t\r\n");
-    size_t end = s.find_last_not_of(" \t\r\n");
-    if(start == string::npos || end == string::npos) return "";
-    return s.substr(start, end - start + 1);
-}
+
 int main(int argc,char*argv[]){
     if(argc!=3){
         cerr<<"Usage: validator <input_csv> output_csv>";
@@ -74,20 +77,27 @@ int main(int argc,char*argv[]){
     bool headerProcessed=false;
 
     while(getline(input,line)){
-        stringstream ss(line);
-        vector<string>row;
-        string cell;
-        while(getline(ss,cell,',')){
-            row.push_back(cell);
-        }
         if(!headerProcessed){
             output<<line<<",email_valid\n";
             headerProcessed=true;
-        }else{
-            string email=row.size()>2 ? row[2]:"";
-           bool valid=isvalid(trim(email));
-           output<<line<<","<<(valid ? "True":"False")<<"\n";
+            continue;
         }
+
+        size_t first = line.find(',');
+        size_t second = (first==string::npos) ? string::npos : line.find(',', first+1);
+        string_view email_field;
+        if(second != string::npos){
+            size_t third_start = second + 1;
+            size_t third_end = line.find(',', third_start);
+            if(third_end == string::npos) third_end = line.size();
+            email_field = string_view(line).substr(third_start, third_end - third_start);
+        } else {
+            email_field = string_view();
+        }
+
+        string_view email_trimmed = trim_view(email_field);
+        bool valid = isvalid(email_trimmed);
+        output<<line<<","<<(valid ? "True":"False")<<"\n";
     }
 
     input.close();
