@@ -148,13 +148,15 @@ bool isDigit(char c){
 }
 
 bool isvalid(const string &email){
+
+    //Length Checks for the emails:-
     //Checks the length of the email;
     if(email.length()==0){
         return false;
     }
-
+     
     //To check if the first character is alphabet or not 
-    if(email.length()>254)return false;
+    // if(email.length()>255)return false;
 
     size_t atPos=email.find('@');
     //means @ is not present in the email;
