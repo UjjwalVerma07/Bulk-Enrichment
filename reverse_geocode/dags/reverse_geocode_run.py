@@ -87,8 +87,6 @@ def run_reverse_geocode(input_bucket=DEFAULT_INPUT_BUCKET, input_key=DEFAULT_INP
         merged_df.fillna({"city":"Unknown"}, inplace=True)
         merged_df.to_csv(LOCAL_OUTPUT, index=False)
 
-
-        print(f"Using Variables in Airflow : {CAP_SIZE}")
         # Upload output
         s3_utils.upload_file(out_bucket, out_key, LOCAL_OUTPUT)
         send_status("reverse_geocode","Succeeded")
@@ -112,4 +110,5 @@ if __name__ == "__main__":
         run_reverse_geocode_stream(
             os.environ.get("INPUT_TOPIC"),
             os.environ.get("OUTPUT_TOPIC")
-        )
+        ) 
+        

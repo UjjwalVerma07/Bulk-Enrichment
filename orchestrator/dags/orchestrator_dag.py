@@ -346,7 +346,8 @@ def choose_mode(ti):
     config = ti.xcom_pull(key="pipeline_config", task_ids="fetch_pipeline_config")
     pipelines=config.get("pipelines",[])
     if not pipelines:
-        return "end"
+        pipelines=[config]
+        # return "end"
     mode=pipelines[0].get("mode","batch").lower()
     print(f"Orchestrator mode chosen: {mode}")
     if mode == "batch":
@@ -392,9 +393,6 @@ def wait_for_kafka_data(pipeline: dict):
     return pipeline
 
 
-
-
-
 from airflow.models import DagRun
 from airflow.utils.state import State
 import time
@@ -426,7 +424,6 @@ CAP_SIZE=5
 import uuid
 def count_kafka_message(topic):
     from kafka import KafkaConsumer
-    group_id = f"enrich-consumer-{uuid.uuid4()}"
     consumer=KafkaConsumer(
         topic,
         bootstrap_servers=['kafka:9092'],
@@ -530,9 +527,6 @@ def run_stream_pipeline(pipeline:dict):
 from airflow.decorators import task
 @task
 def run_single_pipeline(pipeline: dict):
-    """
-    Run one pipeline sequentially (batch mode).
-    """
     prev_bucket = pipeline.get("input_bucket")
     prev_key = pipeline.get("input_key")
     sequence = pipeline.get("sequence", [])
@@ -558,7 +552,8 @@ def extract_real_pipelines(ti):
         raise ValueError("No config foudn in XCom from fetch_pipeline_config")
     pipelines=config.get("pipelines",[])
     if not pipelines:
-        raise ValueError("No pipelines found in config!")
+        pipelines=[config]
+        # raise ValueError("No pipelines found in config!")
     extracted=[]
     for idx,pipeline in enumerate(pipelines,start=1):
         extracted.append({
@@ -573,9 +568,6 @@ def extract_real_pipelines(ti):
 
 #This is for Extracting the Batch Pipelines
 def extract_pipelines(ti):
-    """
-    Extract multiple pipelines from config and return list of dicts.
-    """
     config = ti.xcom_pull(task_ids="fetch_pipeline_config", key="pipeline_config")
 
     if config is None:
@@ -583,12 +575,14 @@ def extract_pipelines(ti):
 
     pipelines = config.get("pipelines", [])
     if not pipelines:
-        raise ValueError("No pipelines found in config!")
+        pipelines=[config]
+        # raise ValueError("No pipelines found in config!")
 
     extracted = []
     for idx, pipeline in enumerate(pipelines, start=1):
         extracted.append({
             "pipeline_id": f"pipeline_{idx}",
+            "mode":pipeline.get("mode","batch"), #Made Changes Here Last Time
             "input_bucket": pipeline.get("input_bucket", "raw"),
             "input_key": pipeline.get("input_key", "customer_raw.csv"),
             "sequence": pipeline.get("sequence", [])

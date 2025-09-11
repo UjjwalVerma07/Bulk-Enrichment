@@ -1,4 +1,110 @@
-#include<bits/stdc++.h>
+// #include<bits/stdc++.h>
+// using namespace std;
+
+// bool isChar(char c){
+//     if((c>='A' and c<='Z') || (c>='a' and c<='z')){
+//         return true;
+//     }
+//     return false;
+// }
+
+// bool isDigit(char c){
+//     if(c>='0' && c<='9'){
+//         return true;
+//     }
+//     return false;
+// }
+
+// bool isvalid(string email){
+//     //Check if first character is alphabet or not
+//     if(email.length()==0){
+//         return false;
+//     }
+//     if(!isChar(email[0])){
+//         return false;
+//     }
+//     int at=-1;
+//     int dot=-1;
+//     for(int i=0;i<email.length();i++){
+//         if(email[i]=='@'){
+//             at=i;
+//         }
+//         else if(email[i]=='.'){
+//             dot=i;
+//         }
+//     }
+//     if(at==-1 or dot==-1){
+//         return false;
+//     }
+//      if(at>dot){
+//         return false;
+//     }
+//     if(dot>=email.length()-1){
+//         return false;
+//     }
+//     return true;
+// }
+// string trim(const string &s) {
+//     size_t start = s.find_first_not_of(" \t\r\n");
+//     size_t end = s.find_last_not_of(" \t\r\n");
+//     if(start == string::npos || end == string::npos) return "";
+//     return s.substr(start, end - start + 1);
+// }
+// int main(int argc,char*argv[]){
+//     if(argc!=3){
+//         cerr<<"Usage: validator <input_csv> output_csv>";
+//         return 1;
+//     }
+//     string inputFile=argv[1];
+//     string outputFile=argv[2];
+    
+//     ifstream input(inputFile);
+//     ofstream output(outputFile);
+
+//     if(!input.is_open()){
+//         cout<<"Error opening input file";
+//         return 1;
+//     }
+//     if(!output.is_open()){
+//         cout<<"Error opening output file";
+//         return 1;
+//     }
+
+//     string line;
+//     bool headerProcessed=false;
+
+//     while(getline(input,line)){
+//         stringstream ss(line);
+//         vector<string>row;
+//         string cell;
+//         while(getline(ss,cell,',')){
+//             row.push_back(cell);
+//         }
+//         if(!headerProcessed){
+//             output<<line<<",email_valid\n";
+//             headerProcessed=true;
+//         }else{
+//             string email=row.size()>2 ? row[2]:"";
+//            bool valid=isvalid(trim(email));
+//            output<<line<<","<<(valid ? "True":"False")<<"\n";
+//         }
+//     }
+
+//     input.close();
+//     output.close();
+
+//     cout<<"Validation Complete. Output Written to "<<outputFile<<endl;
+//     return 0;
+// }
+
+
+#include "validator.h"
+#include <iostream>
+#include <string>
+#include <unordered_set>
+#include <fstream>
+#include <sstream>
+#include <vector>
 using namespace std;
 
 bool isChar(char c){
@@ -15,14 +121,37 @@ bool isDigit(char c){
     return false;
 }
 
-bool isvalid(string email){
+bool isvalid(const string &email){
     //Check if first character is alphabet or not
     if(email.length()==0){
         return false;
     }
-    if(!isChar(email[0])){
+
+    //To check if the first character is alphabet or not 
+    if(email.length()>254)return false;
+
+    size_t atPos=email.find('@');
+    //means @ is not present in the email;
+    if(atPos==string::npos)return false;
+    //meand duplicate @ are present;
+    if(email.find('@',atPos+1)!=string::npos)return false;
+
+    string local=email.substr(0,atPos);
+    string domain=email.substr(atPos+1);
+
+    if(local.size()==0 or domain.size()==0)return false;
+     //No Consecutive Dot anywhere
+    if(email.find("..")!=string::npos){
         return false;
     }
+    
+
+    //This is For the Size Check
+    if(local.size()>64)return false;
+    if(domain.size()>255)return false;
+
+
+    //this is to chekck whether the . comes befores @
     int at=-1;
     int dot=-1;
     for(int i=0;i<email.length();i++){
@@ -42,57 +171,86 @@ bool isvalid(string email){
     if(dot>=email.length()-1){
         return false;
     }
-    return true;
+
+   //valid characters in local part 
+    for(char c :local){
+        bool isLetter=isChar(c);
+        bool isNumber=isDigit(c);
+        bool isAllowedPunct=(c=='.' || c=='_' || c=='-');
+        if(!(isLetter || isNumber || isAllowedPunct))return false;
+    }
+
+    //top level domain should be atleast of 2 in size
+    size_t lastDot=domain.rfind('.');
+
+    //means the last dot is not present;
+    if(lastDot==string::npos)return false;
+
+    if(lastDot==domain.size()-1)return false;
+
+    string tld=domain.substr(lastDot+1);
+    if(tld.size()<2)return false;
+    if(domain.front()=='.' || domain.back()=='.')return false;
+    
+    static const unordered_set<string>allowedDomains={
+        "gmail.com","yahoo.com","outlook.com","data-axle.com","example.com"
+    };
+    if(allowedDomains.find(domain)==allowedDomains.end()){
+        return false;
+    }
+   return true;
 }
+
+
 string trim(const string &s) {
     size_t start = s.find_first_not_of(" \t\r\n");
     size_t end = s.find_last_not_of(" \t\r\n");
     if(start == string::npos || end == string::npos) return "";
     return s.substr(start, end - start + 1);
 }
-int main(int argc,char*argv[]){
-    if(argc!=3){
-        cerr<<"Usage: validator <input_csv> output_csv>";
-        return 1;
-    }
-    string inputFile=argv[1];
-    string outputFile=argv[2];
+// int main(int argc,char*argv[]){
+//     if(argc!=3){
+//         cerr<<"Usage: validator <input_csv> output_csv>";
+//         return 1;
+//     }
+//     string inputFile=argv[1];
+//     string outputFile=argv[2];
     
-    ifstream input(inputFile);
-    ofstream output(outputFile);
+//     ifstream input(inputFile);
+//     ofstream output(outputFile);
 
-    if(!input.is_open()){
-        cout<<"Error opening input file";
-        return 1;
-    }
-    if(!output.is_open()){
-        cout<<"Error opening output file";
-        return 1;
-    }
+//     if(!input.is_open()){
+//         cout<<"Error opening input file";
+//         return 1;
+//     }
+//     if(!output.is_open()){
+//         cout<<"Error opening output file";
+//         return 1;
+//     }
 
-    string line;
-    bool headerProcessed=false;
+//     string line;
+//     bool headerProcessed=false;
 
-    while(getline(input,line)){
-        stringstream ss(line);
-        vector<string>row;
-        string cell;
-        while(getline(ss,cell,',')){
-            row.push_back(cell);
-        }
-        if(!headerProcessed){
-            output<<line<<",email_valid\n";
-            headerProcessed=true;
-        }else{
-            string email=row.size()>2 ? row[2]:"";
-           bool valid=isvalid(trim(email));
-           output<<line<<","<<(valid ? "True":"False")<<"\n";
-        }
-    }
+//     while(getline(input,line)){
+//         stringstream ss(line);
+//         vector<string>row;
+//         string cell;
+//         while(getline(ss,cell,',')){
+//             row.push_back(cell);
+//         }
+//         if(!headerProcessed){
+//             output<<line<<",email_valid\n";
+//             headerProcessed=true;
+//         }else{
+//             string email=row.size()>2 ? row[2]:"";
+//            bool valid=isvalid(trim(email));
+//            output<<line<<","<<(valid ? "True":"False")<<"\n";
+//         }
+//     }
 
-    input.close();
-    output.close();
+//     input.close();
+//     output.close();
 
-    cout<<"Validation Complete. Output Written to "<<outputFile<<endl;
-    return 0;
-}
+//     cout<<"Validation Complete. Output Written to "<<outputFile<<endl;
+//     return 0;
+// }

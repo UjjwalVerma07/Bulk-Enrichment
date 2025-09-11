@@ -13,6 +13,14 @@ COPY email_validation/dags/ /opt/airflow/dags/email_validation/
 COPY email_validation/cpp/ /opt/airflow/dags/email_validation/cpp/
 COPY email_validation/scripts/ /opt/airflow/dags/email_validation/scripts/
 COPY common/ /opt/airflow/common/
+USER root
+RUN g++ -std=c++17 /opt/airflow/dags/email_validation/cpp/main.cpp \
+      /opt/airflow/dags/email_validation/cpp/validator.cpp \
+    -o /opt/airflow/dags/email_validation/cpp/validator && \
+    chmod +x /opt/airflow/dags/email_validation/cpp/validator
+USER airflow
+
+
 ENV PYTHONPATH="${PYTHONPATH}:/opt/airflow"
 
 USER airflow

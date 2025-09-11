@@ -5,3 +5,7 @@ id,name,email,latitude,longitude,city
 4,Divya,divya@example.com.,13.0827,80.2707,Chennai
 5,Sohan,sohan@example.com,22.5726,88.3639,Kolkata
 6,Kiran,kiran@example.com,28.7041,77.1025,Unknown
+7,Priya,priya@example.com,17.385,78.4867,Hyderabad
+8,Arjun,arjun@example.com,23.2599,77.4126,Bhopal
+9,Anita,anita@example.com,26.9124,75.7873,Jaipur
+10,Rahul,rahul@example.com,15.3173,75.7139,Belgaum

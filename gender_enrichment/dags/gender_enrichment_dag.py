@@ -56,9 +56,9 @@ with DAG(
             "OUT_KEY": "{{ dag_run.conf.get('out_key', params.out_key) }}"
         },
         mounts=[
-        Mount(source="/Users/uverma/bulk-enrichment/gender_enrichment/data", target="/gender_enrichment/data", type="bind"),
-        Mount(source="/Users/uverma/bulk-enrichment/samples/input", target="/samples/input", type="bind"),
-        Mount(source="/Users/uverma/bulk-enrichment/samples/output", target="/samples/output", type="bind"),
+        Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/gender_enrichment/data", target="/gender_enrichment/data", type="bind"),
+        Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/input", target="/samples/input", type="bind"),
+        Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/output", target="/samples/output", type="bind"),
         ],
         mount_tmp_dir=False
     )
@@ -79,15 +79,30 @@ with DAG(
             "OUTPUT_TOPIC": "{{ dag_run.conf.get('out_topic', params.output_topic) }}"
         },
         mounts=[
-            Mount(source="/Users/uverma/bulk-enrichment/gender_enrichment/data", target="/gender_enrichment/data", type="bind"),
-            Mount(source="/Users/uverma/bulk-enrichment/samples/input", target="/samples/input", type="bind"),
-            Mount(source="/Users/uverma/bulk-enrichment/samples/output", target="/samples/output", type="bind"),
+            Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/gender_enrichment/data", target="/gender_enrichment/data", type="bind"),
+            Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/input", target="/samples/input", type="bind"),
+            Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/output", target="/samples/output", type="bind"),
         ],
         mount_tmp_dir=False
     )
 
+
+    # def choose_mode(**context):
+    #     mode=context["params"].get("mode","batch")
+    #     if mode=="batch":
+    #         return "gender_enrich_task"
+    #     else:
+    #         return "realtime_gender_enrichment_task"
+
     def choose_mode(**context):
-        mode=context["params"].get("mode","batch")
+        # mode=context["params"].get("mode","batch")
+        # mode=dag_run.conf.get('mode',context["params"].get("mode","batch"))
+        dag_run=context.get("dag_run")
+        mode="batch"
+        if dag_run and dag_run.conf and "mode" in dag_run.conf:
+            mode=dag_run.conf.get("mode")
+        else:
+            mode=context["params"].get("mode","batch")
         if mode=="batch":
             return "gender_enrich_task"
         else:

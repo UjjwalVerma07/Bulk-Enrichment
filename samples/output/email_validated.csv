@@ -1,7 +1,11 @@
 id,name,email,latitude,longitude,email_valid
 1,Amit,amit@example.com,28.6139,77.2090,True
 2,Neha,neha@example.com,19.0760,72.8777,True
-3,Ravi,ravi@example.com,12.9716,77.5946,True
+3,Ravi,ravi@gmail.com,12.9716,77.5946,True
 4,Divya,divya@example.com.,13.0827,80.2707,False
-5,Sohan,sohan@example.com,22.5726,88.3639,True
-6,Kiran,kiran@example.com,28.7041,77.1025,True
+5,Sohan,sohan@outlook.com,22.5726,88.3639,True
+6,Kiran,kiran@wizard.com,28.7041,77.1025,False
+7,Priya,priya@example.com,17.3850,78.4867,True
+8,Arjun,arjun@example.com,23.2599,77.4126,True
+9,Anita,anita@example.com,26.9124,75.7873,True
+10,Rahul,rahul@example.com,15.3173,75.7139,True

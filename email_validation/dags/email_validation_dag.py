@@ -56,8 +56,8 @@ with DAG(
         mounts=[
         # Mount(source="/Users/uverma/bulk-enrichment/reverse_geocode", target="/opt/airflow/dags/reverse_geocode", type="bind"),
         # Mount(source="/Users/uverma/bulk-enrichment/reverse_geocode/data", target="/reverse_geocode/data", type="bind"),
-        Mount(source="/Users/uverma/bulk-enrichment/samples/input", target="/samples/input", type="bind"),
-        Mount(source="/Users/uverma/bulk-enrichment/samples/output", target="/samples/output", type="bind"),
+        Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/input", target="/samples/input", type="bind"),
+        Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/output", target="/samples/output", type="bind"),
     ],
     mount_tmp_dir=False
 
@@ -81,15 +81,29 @@ with DAG(
         },
         mounts=[
             # Mount(source="/Users/uverma/bulk-enrichment/reverse_geocode/data", target="/reverse_geocode/data", type="bind"),
-            Mount(source="/Users/uverma/bulk-enrichment/samples/input", target="/samples/input", type="bind"),
-            Mount(source="/Users/uverma/bulk-enrichment/samples/output", target="/samples/output", type="bind"),
+            Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/input", target="/samples/input", type="bind"),
+            Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/output", target="/samples/output", type="bind"),
         ],
         mount_tmp_dir=False
     )
 
 
+    # def choose_mode(**context):
+    #     mode=context["params"].get("mode","batch")
+    #     if mode=="batch":
+    #         return "validate_emails"
+    #     else:
+    #         return "realtime_validate_emails"
+
     def choose_mode(**context):
-        mode=context["params"].get("mode","batch")
+        # mode=context["params"].get("mode","batch")
+        dag_run=context.get("dag_run")
+        mode="batch"
+        if dag_run and dag_run.conf and "mode" in dag_run.conf:
+            mode=dag_run.conf.get("mode")
+        else:
+            mode=context["params"].get("mode","batch")
+
         if mode=="batch":
             return "validate_emails"
         else:
