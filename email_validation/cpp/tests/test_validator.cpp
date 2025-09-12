@@ -4,7 +4,6 @@
 using namespace std;
 
 //TESTCASES FOR THE ISCHAR
-
 TEST(CharCheckTest,Letters){
     EXPECT_TRUE(isChar('a'));
     EXPECT_TRUE(isChar('F'));
@@ -14,7 +13,6 @@ TEST(CharCheckTest,Letters){
 }
 
 //TESTCASES FOR THE ISDIGIT
-
 TEST(DigitCheckTest,Digits){
     EXPECT_TRUE(isDigit('0'));
     EXPECT_TRUE(isDigit('9'));
@@ -31,7 +29,7 @@ class TrimTestCheck:public testing::TestWithParam<TrimTestCase>{};
 TEST_P(TrimTestCheck,HandledTrimmedStrings){
     TrimTestCase param=GetParam();
     EXPECT_EQ(trim(param.input),param.expected);
-};
+}
 INSTANTIATE_TEST_SUITE_P(Trimtest,TrimTestCheck,testing::Values(
     TrimTestCase{" ujjwal","ujjwal"},
     TrimTestCase{"verma   ","verma"},
@@ -74,9 +72,6 @@ TEST(EMAIL_VALIDATION_TEST,EmptyLocalOrDomain){
     EXPECT_FALSE(isvalid(empty_domain));
 }
 
-
-
-
 TEST(EMAIL_VALIDATION_TEST,DuplicateDots){
     string email1="ujjwalvarma6948@gmail..com";
     string email2="ujjwal..varma6948@gmail.com";
@@ -111,11 +106,22 @@ TEST_P(Email_Validation_NoDot,NoDotNoAt){
     string email=GetParam();
     EXPECT_FALSE(isvalid(email));
 };
+
+string NoDotNoAtTestName(const testing::TestParamInfo<string>& info) {
+    std::string name = info.param;
+    for (auto& c : name) {
+        if (!isalnum(c)) {
+            c = '_';
+        }
+    }
+    return "Case_" + std::to_string(info.index) + "_" + name;
+}
+
 INSTANTIATE_TEST_SUITE_P(NoDotNoAtTest,Email_Validation_NoDot,testing::Values(
           "ujjwalverma",
           "ujjwalvermadata-axle.com",
           "ujjwalverma@com"
-));
+),NoDotNoAtTestName);
 
 
 TEST(EMAIL_VALIDATION_TEST,DotAtLast){
@@ -125,19 +131,27 @@ TEST(EMAIL_VALIDATION_TEST,DotAtLast){
     EXPECT_FALSE(isvalid(email2));
 }
 
-
 class Email_Validation_InvalidCharacters:public testing::TestWithParam<std::string>{};
 TEST_P(Email_Validation_InvalidCharacters,InvalidEmail){
     string email=GetParam();
     EXPECT_FALSE(isvalid(email));
 }
-
+string InvalidEmailTestNameGenerator(const testing::TestParamInfo<string>&info){
+    string name=info.param;
+    for(char &c:name){
+        if(!isalnum(c)){
+            c='_';
+        }
+    }
+    return name;
+}
 INSTANTIATE_TEST_SUITE_P(InvalidEmailTest,Email_Validation_InvalidCharacters,testing::Values(
     "ujjwal$varma@gmail.com",
     "user!name@yahoo.com",
     "test%email@outlook.com",
     "hello world@gmail.com"
-));
+),InvalidEmailTestNameGenerator);
+
 
 
 class Email_Validation_TLD_Short:public testing::TestWithParam<string>{};
@@ -146,7 +160,7 @@ TEST_P(Email_Validation_TLD_Short,Email_Validation_Short_TLD){
     EXPECT_FALSE(isvalid(email));
 }
 
-INSTANTIATE_TEST_SUITE_P(Email_Validation_TLD,Email_Validation_TLD_Short,testing::Values(
+INSTANTIATE_TEST_SUITE_P(Email_Validation_TLD_Test,Email_Validation_TLD_Short,testing::Values(
     "ujjwal@gmail.c",
     "user@domain.a",
     "name@sub.domain.x"
@@ -159,7 +173,15 @@ TEST_P(EMAIL_VALIDATION_FOR_DOMAIN,VALID_DOMAIN_TEST){
     string email=GetParam();
     EXPECT_TRUE(isvalid(email));
 }
-
+string ValidTestNameGenerator(const testing::TestParamInfo<string>&info){
+          string name=info.param;
+    for(char &c:name){
+        if(!isalnum(c)){
+            c='_';
+        }
+    }
+    return name;
+}
 INSTANTIATE_TEST_SUITE_P(ValidDomainTest,EMAIL_VALIDATION_FOR_DOMAIN,testing::Values(
     "ujjwalvarma6948@gmail.com",
     "user_name-123@outlook.com",
@@ -167,7 +189,9 @@ INSTANTIATE_TEST_SUITE_P(ValidDomainTest,EMAIL_VALIDATION_FOR_DOMAIN,testing::Va
     "simple@example.com",
     "user.name_with-dots@gmail.com",
    "firstname.lastname@outlook.com"
-));
+),ValidTestNameGenerator);
+
+
 
 
 // Test edge cases for valid characters and sizes
