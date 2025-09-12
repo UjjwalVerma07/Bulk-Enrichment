@@ -1,0 +1,948 @@
+Start testing: Sep 12 06:29 UTC
+----------------------------------------------------------
+1/35 Testing: CharCheckTest.Letters
+1/35 Test: CharCheckTest.Letters
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=CharCheckTest.Letters" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"CharCheckTest.Letters" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = CharCheckTest.Letters
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from CharCheckTest
+[ RUN      ] CharCheckTest.Letters
+[       OK ] CharCheckTest.Letters (0 ms)
+[----------] 1 test from CharCheckTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"CharCheckTest.Letters" end time: Sep 12 06:29 UTC
+"CharCheckTest.Letters" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/35 Testing: DigitCheckTest.Digits
+2/35 Test: DigitCheckTest.Digits
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=DigitCheckTest.Digits" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"DigitCheckTest.Digits" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = DigitCheckTest.Digits
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from DigitCheckTest
+[ RUN      ] DigitCheckTest.Digits
+[       OK ] DigitCheckTest.Digits (0 ms)
+[----------] 1 test from DigitCheckTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"DigitCheckTest.Digits" end time: Sep 12 06:29 UTC
+"DigitCheckTest.Digits" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/35 Testing: EMAIL_VALIDATION_TEST.EmptyEmail
+3/35 Test: EMAIL_VALIDATION_TEST.EmptyEmail
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=EMAIL_VALIDATION_TEST.EmptyEmail" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"EMAIL_VALIDATION_TEST.EmptyEmail" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = EMAIL_VALIDATION_TEST.EmptyEmail
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from EMAIL_VALIDATION_TEST
+[ RUN      ] EMAIL_VALIDATION_TEST.EmptyEmail
+[       OK ] EMAIL_VALIDATION_TEST.EmptyEmail (0 ms)
+[----------] 1 test from EMAIL_VALIDATION_TEST (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"EMAIL_VALIDATION_TEST.EmptyEmail" end time: Sep 12 06:29 UTC
+"EMAIL_VALIDATION_TEST.EmptyEmail" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/35 Testing: EMAIL_VALIDATION_TEST.TooLongEmail
+4/35 Test: EMAIL_VALIDATION_TEST.TooLongEmail
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=EMAIL_VALIDATION_TEST.TooLongEmail" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"EMAIL_VALIDATION_TEST.TooLongEmail" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = EMAIL_VALIDATION_TEST.TooLongEmail
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from EMAIL_VALIDATION_TEST
+[ RUN      ] EMAIL_VALIDATION_TEST.TooLongEmail
+[       OK ] EMAIL_VALIDATION_TEST.TooLongEmail (0 ms)
+[----------] 1 test from EMAIL_VALIDATION_TEST (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"EMAIL_VALIDATION_TEST.TooLongEmail" end time: Sep 12 06:29 UTC
+"EMAIL_VALIDATION_TEST.TooLongEmail" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/35 Testing: EMAIL_VALIDATION_TEST.MissingAtSymbol
+5/35 Test: EMAIL_VALIDATION_TEST.MissingAtSymbol
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=EMAIL_VALIDATION_TEST.MissingAtSymbol" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"EMAIL_VALIDATION_TEST.MissingAtSymbol" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = EMAIL_VALIDATION_TEST.MissingAtSymbol
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from EMAIL_VALIDATION_TEST
+[ RUN      ] EMAIL_VALIDATION_TEST.MissingAtSymbol
+[       OK ] EMAIL_VALIDATION_TEST.MissingAtSymbol (0 ms)
+[----------] 1 test from EMAIL_VALIDATION_TEST (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"EMAIL_VALIDATION_TEST.MissingAtSymbol" end time: Sep 12 06:29 UTC
+"EMAIL_VALIDATION_TEST.MissingAtSymbol" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/35 Testing: EMAIL_VALIDATION_TEST.DuplicateAtSymbol
+6/35 Test: EMAIL_VALIDATION_TEST.DuplicateAtSymbol
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=EMAIL_VALIDATION_TEST.DuplicateAtSymbol" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"EMAIL_VALIDATION_TEST.DuplicateAtSymbol" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = EMAIL_VALIDATION_TEST.DuplicateAtSymbol
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from EMAIL_VALIDATION_TEST
+[ RUN      ] EMAIL_VALIDATION_TEST.DuplicateAtSymbol
+[       OK ] EMAIL_VALIDATION_TEST.DuplicateAtSymbol (0 ms)
+[----------] 1 test from EMAIL_VALIDATION_TEST (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"EMAIL_VALIDATION_TEST.DuplicateAtSymbol" end time: Sep 12 06:29 UTC
+"EMAIL_VALIDATION_TEST.DuplicateAtSymbol" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/35 Testing: EMAIL_VALIDATION_TEST.EmptyLocalOrDomain
+7/35 Test: EMAIL_VALIDATION_TEST.EmptyLocalOrDomain
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=EMAIL_VALIDATION_TEST.EmptyLocalOrDomain" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"EMAIL_VALIDATION_TEST.EmptyLocalOrDomain" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = EMAIL_VALIDATION_TEST.EmptyLocalOrDomain
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from EMAIL_VALIDATION_TEST
+[ RUN      ] EMAIL_VALIDATION_TEST.EmptyLocalOrDomain
+[       OK ] EMAIL_VALIDATION_TEST.EmptyLocalOrDomain (0 ms)
+[----------] 1 test from EMAIL_VALIDATION_TEST (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"EMAIL_VALIDATION_TEST.EmptyLocalOrDomain" end time: Sep 12 06:29 UTC
+"EMAIL_VALIDATION_TEST.EmptyLocalOrDomain" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/35 Testing: EMAIL_VALIDATION_TEST.DuplicateDots
+8/35 Test: EMAIL_VALIDATION_TEST.DuplicateDots
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=EMAIL_VALIDATION_TEST.DuplicateDots" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"EMAIL_VALIDATION_TEST.DuplicateDots" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = EMAIL_VALIDATION_TEST.DuplicateDots
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from EMAIL_VALIDATION_TEST
+[ RUN      ] EMAIL_VALIDATION_TEST.DuplicateDots
+[       OK ] EMAIL_VALIDATION_TEST.DuplicateDots (0 ms)
+[----------] 1 test from EMAIL_VALIDATION_TEST (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"EMAIL_VALIDATION_TEST.DuplicateDots" end time: Sep 12 06:29 UTC
+"EMAIL_VALIDATION_TEST.DuplicateDots" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/35 Testing: EMAIL_VALIDATION_TEST.TooLongLocal
+9/35 Test: EMAIL_VALIDATION_TEST.TooLongLocal
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=EMAIL_VALIDATION_TEST.TooLongLocal" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"EMAIL_VALIDATION_TEST.TooLongLocal" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = EMAIL_VALIDATION_TEST.TooLongLocal
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from EMAIL_VALIDATION_TEST
+[ RUN      ] EMAIL_VALIDATION_TEST.TooLongLocal
+[       OK ] EMAIL_VALIDATION_TEST.TooLongLocal (0 ms)
+[----------] 1 test from EMAIL_VALIDATION_TEST (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"EMAIL_VALIDATION_TEST.TooLongLocal" end time: Sep 12 06:29 UTC
+"EMAIL_VALIDATION_TEST.TooLongLocal" time elapsed: 00:00:00
+----------------------------------------------------------
+
+10/35 Testing: EMAIL_VALIDATION_TEST.TooLongDomain
+10/35 Test: EMAIL_VALIDATION_TEST.TooLongDomain
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=EMAIL_VALIDATION_TEST.TooLongDomain" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"EMAIL_VALIDATION_TEST.TooLongDomain" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = EMAIL_VALIDATION_TEST.TooLongDomain
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from EMAIL_VALIDATION_TEST
+[ RUN      ] EMAIL_VALIDATION_TEST.TooLongDomain
+[       OK ] EMAIL_VALIDATION_TEST.TooLongDomain (0 ms)
+[----------] 1 test from EMAIL_VALIDATION_TEST (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"EMAIL_VALIDATION_TEST.TooLongDomain" end time: Sep 12 06:29 UTC
+"EMAIL_VALIDATION_TEST.TooLongDomain" time elapsed: 00:00:00
+----------------------------------------------------------
+
+11/35 Testing: EMAIL_VALIDATION_TEST.DotBeforeAt
+11/35 Test: EMAIL_VALIDATION_TEST.DotBeforeAt
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=EMAIL_VALIDATION_TEST.DotBeforeAt" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"EMAIL_VALIDATION_TEST.DotBeforeAt" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = EMAIL_VALIDATION_TEST.DotBeforeAt
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from EMAIL_VALIDATION_TEST
+[ RUN      ] EMAIL_VALIDATION_TEST.DotBeforeAt
+[       OK ] EMAIL_VALIDATION_TEST.DotBeforeAt (0 ms)
+[----------] 1 test from EMAIL_VALIDATION_TEST (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"EMAIL_VALIDATION_TEST.DotBeforeAt" end time: Sep 12 06:29 UTC
+"EMAIL_VALIDATION_TEST.DotBeforeAt" time elapsed: 00:00:00
+----------------------------------------------------------
+
+12/35 Testing: EMAIL_VALIDATION_TEST.DotAtLast
+12/35 Test: EMAIL_VALIDATION_TEST.DotAtLast
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=EMAIL_VALIDATION_TEST.DotAtLast" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"EMAIL_VALIDATION_TEST.DotAtLast" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = EMAIL_VALIDATION_TEST.DotAtLast
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from EMAIL_VALIDATION_TEST
+[ RUN      ] EMAIL_VALIDATION_TEST.DotAtLast
+[       OK ] EMAIL_VALIDATION_TEST.DotAtLast (0 ms)
+[----------] 1 test from EMAIL_VALIDATION_TEST (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"EMAIL_VALIDATION_TEST.DotAtLast" end time: Sep 12 06:29 UTC
+"EMAIL_VALIDATION_TEST.DotAtLast" time elapsed: 00:00:00
+----------------------------------------------------------
+
+13/35 Testing: EMAIL_VALIDATION_TEST.EdgeCaseValidEmails
+13/35 Test: EMAIL_VALIDATION_TEST.EdgeCaseValidEmails
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=EMAIL_VALIDATION_TEST.EdgeCaseValidEmails" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"EMAIL_VALIDATION_TEST.EdgeCaseValidEmails" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = EMAIL_VALIDATION_TEST.EdgeCaseValidEmails
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from EMAIL_VALIDATION_TEST
+[ RUN      ] EMAIL_VALIDATION_TEST.EdgeCaseValidEmails
+[       OK ] EMAIL_VALIDATION_TEST.EdgeCaseValidEmails (0 ms)
+[----------] 1 test from EMAIL_VALIDATION_TEST (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"EMAIL_VALIDATION_TEST.EdgeCaseValidEmails" end time: Sep 12 06:29 UTC
+"EMAIL_VALIDATION_TEST.EdgeCaseValidEmails" time elapsed: 00:00:00
+----------------------------------------------------------
+
+14/35 Testing: Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 07-00 00-00 00-00 00-00 20-75 6A-6A 77-61 6C-00 74-65 73-74 73-00 70-2F E0-62 9C-11 A9-55 00-00 06-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 00-70 00-00 00-00 00-00 00-00>
+14/35 Test: Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 07-00 00-00 00-00 00-00 20-75 6A-6A 77-61 6C-00 74-65 73-74 73-00 70-2F E0-62 9C-11 A9-55 00-00 06-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 00-70 00-00 00-00 00-00 00-00>
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=Trimtest/TrimTestCheck.HandledTrimmedStrings/0" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 07-00 00-00 00-00 00-00 20-75 6A-6A 77-61 6C-00 74-65 73-74 73-00 70-2F E0-62 9C-11 A9-55 00-00 06-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 00-70 00-00 00-00 00-00 00-00>" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Trimtest/TrimTestCheck.HandledTrimmedStrings/0
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Trimtest/TrimTestCheck
+[ RUN      ] Trimtest/TrimTestCheck.HandledTrimmedStrings/0
+[       OK ] Trimtest/TrimTestCheck.HandledTrimmedStrings/0 (0 ms)
+[----------] 1 test from Trimtest/TrimTestCheck (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 07-00 00-00 00-00 00-00 20-75 6A-6A 77-61 6C-00 74-65 73-74 73-00 70-2F E0-62 9C-11 A9-55 00-00 06-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 00-70 00-00 00-00 00-00 00-00>" end time: Sep 12 06:29 UTC
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 07-00 00-00 00-00 00-00 20-75 6A-6A 77-61 6C-00 74-65 73-74 73-00 70-2F E0-62 9C-11 A9-55 00-00 06-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 00-70 00-00 00-00 00-00 00-00>" time elapsed: 00:00:00
+----------------------------------------------------------
+
+15/35 Testing: Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 08-00 00-00 00-00 00-00 76-65 72-6D 61-20 20-20 00-65 73-74 73-00 70-2F E0-62 9C-11 A9-55 00-00 05-00 00-00 00-00 00-00 76-65 72-6D 61-00 00-70 00-00 00-00 00-00 00-00>
+15/35 Test: Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 08-00 00-00 00-00 00-00 76-65 72-6D 61-20 20-20 00-65 73-74 73-00 70-2F E0-62 9C-11 A9-55 00-00 05-00 00-00 00-00 00-00 76-65 72-6D 61-00 00-70 00-00 00-00 00-00 00-00>
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=Trimtest/TrimTestCheck.HandledTrimmedStrings/1" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 08-00 00-00 00-00 00-00 76-65 72-6D 61-20 20-20 00-65 73-74 73-00 70-2F E0-62 9C-11 A9-55 00-00 05-00 00-00 00-00 00-00 76-65 72-6D 61-00 00-70 00-00 00-00 00-00 00-00>" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Trimtest/TrimTestCheck.HandledTrimmedStrings/1
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Trimtest/TrimTestCheck
+[ RUN      ] Trimtest/TrimTestCheck.HandledTrimmedStrings/1
+[       OK ] Trimtest/TrimTestCheck.HandledTrimmedStrings/1 (0 ms)
+[----------] 1 test from Trimtest/TrimTestCheck (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 08-00 00-00 00-00 00-00 76-65 72-6D 61-20 20-20 00-65 73-74 73-00 70-2F E0-62 9C-11 A9-55 00-00 05-00 00-00 00-00 00-00 76-65 72-6D 61-00 00-70 00-00 00-00 00-00 00-00>" end time: Sep 12 06:29 UTC
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 08-00 00-00 00-00 00-00 76-65 72-6D 61-20 20-20 00-65 73-74 73-00 70-2F E0-62 9C-11 A9-55 00-00 05-00 00-00 00-00 00-00 76-65 72-6D 61-00 00-70 00-00 00-00 00-00 00-00>" time elapsed: 00:00:00
+----------------------------------------------------------
+
+16/35 Testing: Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 70-2F E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00>
+16/35 Test: Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 70-2F E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00>
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=Trimtest/TrimTestCheck.HandledTrimmedStrings/2" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 70-2F E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00>" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Trimtest/TrimTestCheck.HandledTrimmedStrings/2
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Trimtest/TrimTestCheck
+[ RUN      ] Trimtest/TrimTestCheck.HandledTrimmedStrings/2
+[       OK ] Trimtest/TrimTestCheck.HandledTrimmedStrings/2 (0 ms)
+[----------] 1 test from Trimtest/TrimTestCheck (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 70-2F E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00>" end time: Sep 12 06:29 UTC
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 70-2F E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00>" time elapsed: 00:00:00
+----------------------------------------------------------
+
+17/35 Testing: Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <A0-90 9C-11 A9-55 00-00 13-00 00-00 00-00 00-00 13-00 00-00 00-00 00-00 65-72 6D-61 00-00 70-2F E0-62 9C-11 A9-55 00-00 0D-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 2E-00 00-00>
+17/35 Test: Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <A0-90 9C-11 A9-55 00-00 13-00 00-00 00-00 00-00 13-00 00-00 00-00 00-00 65-72 6D-61 00-00 70-2F E0-62 9C-11 A9-55 00-00 0D-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 2E-00 00-00>
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=Trimtest/TrimTestCheck.HandledTrimmedStrings/3" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <A0-90 9C-11 A9-55 00-00 13-00 00-00 00-00 00-00 13-00 00-00 00-00 00-00 65-72 6D-61 00-00 70-2F E0-62 9C-11 A9-55 00-00 0D-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 2E-00 00-00>" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Trimtest/TrimTestCheck.HandledTrimmedStrings/3
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Trimtest/TrimTestCheck
+[ RUN      ] Trimtest/TrimTestCheck.HandledTrimmedStrings/3
+[       OK ] Trimtest/TrimTestCheck.HandledTrimmedStrings/3 (0 ms)
+[----------] 1 test from Trimtest/TrimTestCheck (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <A0-90 9C-11 A9-55 00-00 13-00 00-00 00-00 00-00 13-00 00-00 00-00 00-00 65-72 6D-61 00-00 70-2F E0-62 9C-11 A9-55 00-00 0D-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 2E-00 00-00>" end time: Sep 12 06:29 UTC
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <A0-90 9C-11 A9-55 00-00 13-00 00-00 00-00 00-00 13-00 00-00 00-00 00-00 65-72 6D-61 00-00 70-2F E0-62 9C-11 A9-55 00-00 0D-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 2E-00 00-00>" time elapsed: 00:00:00
+----------------------------------------------------------
+
+18/35 Testing: Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 0F-00 00-00 00-00 00-00 20-20 20-75 6A-6A 77-61 6C-20 76-65 72-6D 61-00 E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00>
+18/35 Test: Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 0F-00 00-00 00-00 00-00 20-20 20-75 6A-6A 77-61 6C-20 76-65 72-6D 61-00 E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00>
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=Trimtest/TrimTestCheck.HandledTrimmedStrings/4" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 0F-00 00-00 00-00 00-00 20-20 20-75 6A-6A 77-61 6C-20 76-65 72-6D 61-00 E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00>" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Trimtest/TrimTestCheck.HandledTrimmedStrings/4
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Trimtest/TrimTestCheck
+[ RUN      ] Trimtest/TrimTestCheck.HandledTrimmedStrings/4
+[       OK ] Trimtest/TrimTestCheck.HandledTrimmedStrings/4 (0 ms)
+[----------] 1 test from Trimtest/TrimTestCheck (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 0F-00 00-00 00-00 00-00 20-20 20-75 6A-6A 77-61 6C-20 76-65 72-6D 61-00 E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00>" end time: Sep 12 06:29 UTC
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 0F-00 00-00 00-00 00-00 20-20 20-75 6A-6A 77-61 6C-20 76-65 72-6D 61-00 E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00>" time elapsed: 00:00:00
+----------------------------------------------------------
+
+19/35 Testing: Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <30-B1 9C-11 A9-55 00-00 11-00 00-00 00-00 00-00 11-00 00-00 00-00 00-00 6C-20 76-65 72-6D 61-00 E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00>
+19/35 Test: Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <30-B1 9C-11 A9-55 00-00 11-00 00-00 00-00 00-00 11-00 00-00 00-00 00-00 6C-20 76-65 72-6D 61-00 E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00>
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=Trimtest/TrimTestCheck.HandledTrimmedStrings/5" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <30-B1 9C-11 A9-55 00-00 11-00 00-00 00-00 00-00 11-00 00-00 00-00 00-00 6C-20 76-65 72-6D 61-00 E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00>" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Trimtest/TrimTestCheck.HandledTrimmedStrings/5
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Trimtest/TrimTestCheck
+[ RUN      ] Trimtest/TrimTestCheck.HandledTrimmedStrings/5
+[       OK ] Trimtest/TrimTestCheck.HandledTrimmedStrings/5 (0 ms)
+[----------] 1 test from Trimtest/TrimTestCheck (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <30-B1 9C-11 A9-55 00-00 11-00 00-00 00-00 00-00 11-00 00-00 00-00 00-00 6C-20 76-65 72-6D 61-00 E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00>" end time: Sep 12 06:29 UTC
+"Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <30-B1 9C-11 A9-55 00-00 11-00 00-00 00-00 00-00 11-00 00-00 00-00 00-00 6C-20 76-65 72-6D 61-00 E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00>" time elapsed: 00:00:00
+----------------------------------------------------------
+
+20/35 Testing: NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_0_ujjwalverma  # GetParam() = "ujjwalverma"
+20/35 Test: NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_0_ujjwalverma  # GetParam() = "ujjwalverma"
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_0_ujjwalverma" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_0_ujjwalverma  # GetParam() = "ujjwalverma"" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_0_ujjwalverma
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NoDotNoAtTest/Email_Validation_NoDot
+[ RUN      ] NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_0_ujjwalverma
+[       OK ] NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_0_ujjwalverma (0 ms)
+[----------] 1 test from NoDotNoAtTest/Email_Validation_NoDot (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_0_ujjwalverma  # GetParam() = "ujjwalverma"" end time: Sep 12 06:29 UTC
+"NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_0_ujjwalverma  # GetParam() = "ujjwalverma"" time elapsed: 00:00:00
+----------------------------------------------------------
+
+21/35 Testing: NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_1_ujjwalvermadata_axle_com  # GetParam() = "ujjwalvermadata-axle.com"
+21/35 Test: NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_1_ujjwalvermadata_axle_com  # GetParam() = "ujjwalvermadata-axle.com"
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_1_ujjwalvermadata_axle_com" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_1_ujjwalvermadata_axle_com  # GetParam() = "ujjwalvermadata-axle.com"" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_1_ujjwalvermadata_axle_com
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NoDotNoAtTest/Email_Validation_NoDot
+[ RUN      ] NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_1_ujjwalvermadata_axle_com
+[       OK ] NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_1_ujjwalvermadata_axle_com (0 ms)
+[----------] 1 test from NoDotNoAtTest/Email_Validation_NoDot (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_1_ujjwalvermadata_axle_com  # GetParam() = "ujjwalvermadata-axle.com"" end time: Sep 12 06:29 UTC
+"NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_1_ujjwalvermadata_axle_com  # GetParam() = "ujjwalvermadata-axle.com"" time elapsed: 00:00:00
+----------------------------------------------------------
+
+22/35 Testing: NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_2_ujjwalverma_com  # GetParam() = "ujjwalverma@com"
+22/35 Test: NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_2_ujjwalverma_com  # GetParam() = "ujjwalverma@com"
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_2_ujjwalverma_com" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_2_ujjwalverma_com  # GetParam() = "ujjwalverma@com"" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_2_ujjwalverma_com
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from NoDotNoAtTest/Email_Validation_NoDot
+[ RUN      ] NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_2_ujjwalverma_com
+[       OK ] NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_2_ujjwalverma_com (0 ms)
+[----------] 1 test from NoDotNoAtTest/Email_Validation_NoDot (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_2_ujjwalverma_com  # GetParam() = "ujjwalverma@com"" end time: Sep 12 06:29 UTC
+"NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_2_ujjwalverma_com  # GetParam() = "ujjwalverma@com"" time elapsed: 00:00:00
+----------------------------------------------------------
+
+23/35 Testing: InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/ujjwal_varma_gmail_com  # GetParam() = "ujjwal$varma@gmail.com"
+23/35 Test: InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/ujjwal_varma_gmail_com  # GetParam() = "ujjwal$varma@gmail.com"
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/ujjwal_varma_gmail_com" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/ujjwal_varma_gmail_com  # GetParam() = "ujjwal$varma@gmail.com"" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/ujjwal_varma_gmail_com
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from InvalidEmailTest/Email_Validation_InvalidCharacters
+[ RUN      ] InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/ujjwal_varma_gmail_com
+[       OK ] InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/ujjwal_varma_gmail_com (0 ms)
+[----------] 1 test from InvalidEmailTest/Email_Validation_InvalidCharacters (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/ujjwal_varma_gmail_com  # GetParam() = "ujjwal$varma@gmail.com"" end time: Sep 12 06:29 UTC
+"InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/ujjwal_varma_gmail_com  # GetParam() = "ujjwal$varma@gmail.com"" time elapsed: 00:00:00
+----------------------------------------------------------
+
+24/35 Testing: InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/user_name_yahoo_com  # GetParam() = "user!name@yahoo.com"
+24/35 Test: InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/user_name_yahoo_com  # GetParam() = "user!name@yahoo.com"
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/user_name_yahoo_com" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/user_name_yahoo_com  # GetParam() = "user!name@yahoo.com"" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/user_name_yahoo_com
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from InvalidEmailTest/Email_Validation_InvalidCharacters
+[ RUN      ] InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/user_name_yahoo_com
+[       OK ] InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/user_name_yahoo_com (0 ms)
+[----------] 1 test from InvalidEmailTest/Email_Validation_InvalidCharacters (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/user_name_yahoo_com  # GetParam() = "user!name@yahoo.com"" end time: Sep 12 06:29 UTC
+"InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/user_name_yahoo_com  # GetParam() = "user!name@yahoo.com"" time elapsed: 00:00:00
+----------------------------------------------------------
+
+25/35 Testing: InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/test_email_outlook_com  # GetParam() = "test%email@outlook.com"
+25/35 Test: InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/test_email_outlook_com  # GetParam() = "test%email@outlook.com"
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/test_email_outlook_com" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/test_email_outlook_com  # GetParam() = "test%email@outlook.com"" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/test_email_outlook_com
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from InvalidEmailTest/Email_Validation_InvalidCharacters
+[ RUN      ] InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/test_email_outlook_com
+[       OK ] InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/test_email_outlook_com (0 ms)
+[----------] 1 test from InvalidEmailTest/Email_Validation_InvalidCharacters (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/test_email_outlook_com  # GetParam() = "test%email@outlook.com"" end time: Sep 12 06:29 UTC
+"InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/test_email_outlook_com  # GetParam() = "test%email@outlook.com"" time elapsed: 00:00:00
+----------------------------------------------------------
+
+26/35 Testing: InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/hello_world_gmail_com  # GetParam() = "hello world@gmail.com"
+26/35 Test: InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/hello_world_gmail_com  # GetParam() = "hello world@gmail.com"
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/hello_world_gmail_com" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/hello_world_gmail_com  # GetParam() = "hello world@gmail.com"" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/hello_world_gmail_com
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from InvalidEmailTest/Email_Validation_InvalidCharacters
+[ RUN      ] InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/hello_world_gmail_com
+[       OK ] InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/hello_world_gmail_com (0 ms)
+[----------] 1 test from InvalidEmailTest/Email_Validation_InvalidCharacters (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/hello_world_gmail_com  # GetParam() = "hello world@gmail.com"" end time: Sep 12 06:29 UTC
+"InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/hello_world_gmail_com  # GetParam() = "hello world@gmail.com"" time elapsed: 00:00:00
+----------------------------------------------------------
+
+27/35 Testing: Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"ujjwal@gmail.c"
+27/35 Test: Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"ujjwal@gmail.c"
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/0" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"ujjwal@gmail.c"" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/0
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Email_Validation_TLD_Test/Email_Validation_TLD_Short
+[ RUN      ] Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/0
+[       OK ] Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/0 (0 ms)
+[----------] 1 test from Email_Validation_TLD_Test/Email_Validation_TLD_Short (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"ujjwal@gmail.c"" end time: Sep 12 06:29 UTC
+"Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"ujjwal@gmail.c"" time elapsed: 00:00:00
+----------------------------------------------------------
+
+28/35 Testing: Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"user@domain.a"
+28/35 Test: Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"user@domain.a"
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/1" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"user@domain.a"" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/1
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Email_Validation_TLD_Test/Email_Validation_TLD_Short
+[ RUN      ] Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/1
+[       OK ] Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/1 (0 ms)
+[----------] 1 test from Email_Validation_TLD_Test/Email_Validation_TLD_Short (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"user@domain.a"" end time: Sep 12 06:29 UTC
+"Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"user@domain.a"" time elapsed: 00:00:00
+----------------------------------------------------------
+
+29/35 Testing: Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"name@sub.domain.x"
+29/35 Test: Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"name@sub.domain.x"
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/2" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"name@sub.domain.x"" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/2
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Email_Validation_TLD_Test/Email_Validation_TLD_Short
+[ RUN      ] Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/2
+[       OK ] Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/2 (0 ms)
+[----------] 1 test from Email_Validation_TLD_Test/Email_Validation_TLD_Short (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"name@sub.domain.x"" end time: Sep 12 06:29 UTC
+"Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"name@sub.domain.x"" time elapsed: 00:00:00
+----------------------------------------------------------
+
+30/35 Testing: ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/ujjwalvarma6948_gmail_com  # GetParam() = "ujjwalvarma6948@gmail.com"
+30/35 Test: ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/ujjwalvarma6948_gmail_com  # GetParam() = "ujjwalvarma6948@gmail.com"
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/ujjwalvarma6948_gmail_com" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/ujjwalvarma6948_gmail_com  # GetParam() = "ujjwalvarma6948@gmail.com"" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/ujjwalvarma6948_gmail_com
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN
+[ RUN      ] ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/ujjwalvarma6948_gmail_com
+[       OK ] ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/ujjwalvarma6948_gmail_com (0 ms)
+[----------] 1 test from ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/ujjwalvarma6948_gmail_com  # GetParam() = "ujjwalvarma6948@gmail.com"" end time: Sep 12 06:29 UTC
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/ujjwalvarma6948_gmail_com  # GetParam() = "ujjwalvarma6948@gmail.com"" time elapsed: 00:00:00
+----------------------------------------------------------
+
+31/35 Testing: ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_123_outlook_com  # GetParam() = "user_name-123@outlook.com"
+31/35 Test: ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_123_outlook_com  # GetParam() = "user_name-123@outlook.com"
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_123_outlook_com" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_123_outlook_com  # GetParam() = "user_name-123@outlook.com"" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_123_outlook_com
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN
+[ RUN      ] ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_123_outlook_com
+[       OK ] ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_123_outlook_com (0 ms)
+[----------] 1 test from ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_123_outlook_com  # GetParam() = "user_name-123@outlook.com"" end time: Sep 12 06:29 UTC
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_123_outlook_com  # GetParam() = "user_name-123@outlook.com"" time elapsed: 00:00:00
+----------------------------------------------------------
+
+32/35 Testing: ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/first_last_data_axle_com  # GetParam() = "first.last@data-axle.com"
+32/35 Test: ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/first_last_data_axle_com  # GetParam() = "first.last@data-axle.com"
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/first_last_data_axle_com" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/first_last_data_axle_com  # GetParam() = "first.last@data-axle.com"" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/first_last_data_axle_com
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN
+[ RUN      ] ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/first_last_data_axle_com
+[       OK ] ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/first_last_data_axle_com (0 ms)
+[----------] 1 test from ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/first_last_data_axle_com  # GetParam() = "first.last@data-axle.com"" end time: Sep 12 06:29 UTC
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/first_last_data_axle_com  # GetParam() = "first.last@data-axle.com"" time elapsed: 00:00:00
+----------------------------------------------------------
+
+33/35 Testing: ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/simple_example_com  # GetParam() = "simple@example.com"
+33/35 Test: ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/simple_example_com  # GetParam() = "simple@example.com"
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/simple_example_com" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/simple_example_com  # GetParam() = "simple@example.com"" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/simple_example_com
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN
+[ RUN      ] ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/simple_example_com
+[       OK ] ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/simple_example_com (0 ms)
+[----------] 1 test from ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/simple_example_com  # GetParam() = "simple@example.com"" end time: Sep 12 06:29 UTC
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/simple_example_com  # GetParam() = "simple@example.com"" time elapsed: 00:00:00
+----------------------------------------------------------
+
+34/35 Testing: ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_with_dots_gmail_com  # GetParam() = "user.name_with-dots@gmail.com"
+34/35 Test: ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_with_dots_gmail_com  # GetParam() = "user.name_with-dots@gmail.com"
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_with_dots_gmail_com" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_with_dots_gmail_com  # GetParam() = "user.name_with-dots@gmail.com"" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_with_dots_gmail_com
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN
+[ RUN      ] ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_with_dots_gmail_com
+[       OK ] ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_with_dots_gmail_com (0 ms)
+[----------] 1 test from ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_with_dots_gmail_com  # GetParam() = "user.name_with-dots@gmail.com"" end time: Sep 12 06:29 UTC
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_with_dots_gmail_com  # GetParam() = "user.name_with-dots@gmail.com"" time elapsed: 00:00:00
+----------------------------------------------------------
+
+35/35 Testing: ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/firstname_lastname_outlook_com  # GetParam() = "firstname.lastname@outlook.com"
+35/35 Test: ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/firstname_lastname_outlook_com  # GetParam() = "firstname.lastname@outlook.com"
+Command: "/workspace/build-linux/email_validation/cpp/tests/runTests" "--gtest_filter=ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/firstname_lastname_outlook_com" "--gtest_also_run_disabled_tests"
+Directory: /workspace/build-linux/email_validation/cpp/tests
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/firstname_lastname_outlook_com  # GetParam() = "firstname.lastname@outlook.com"" start time: Sep 12 06:29 UTC
+Output:
+----------------------------------------------------------
+Running main() from /workspace/build-linux/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/firstname_lastname_outlook_com
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN
+[ RUN      ] ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/firstname_lastname_outlook_com
+[       OK ] ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/firstname_lastname_outlook_com (0 ms)
+[----------] 1 test from ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/firstname_lastname_outlook_com  # GetParam() = "firstname.lastname@outlook.com"" end time: Sep 12 06:29 UTC
+"ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/firstname_lastname_outlook_com  # GetParam() = "firstname.lastname@outlook.com"" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Sep 12 06:29 UTC

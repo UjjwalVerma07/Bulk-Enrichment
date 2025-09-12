@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -Xlinker --dependency-file=CMakeFiles/runTests.dir/link.d CMakeFiles/runTests.dir/test_validator.cpp.o -o runTests  ../libvalidator.a ../../../lib/libgtest_main.a ../../../lib/libgtest.a
