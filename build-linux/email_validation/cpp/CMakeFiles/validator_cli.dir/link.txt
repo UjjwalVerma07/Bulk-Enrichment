@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -Xlinker --dependency-file=CMakeFiles/validator_cli.dir/link.d CMakeFiles/validator_cli.dir/main.cpp.o -o validator_cli  libvalidator.a

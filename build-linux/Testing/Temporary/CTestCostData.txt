@@ -1,0 +1,36 @@
+CharCheckTest.Letters 1 0.00659091
+DigitCheckTest.Digits 1 0.00535643
+EMAIL_VALIDATION_TEST.EmptyEmail 1 0.00639944
+EMAIL_VALIDATION_TEST.TooLongEmail 1 0.00492969
+EMAIL_VALIDATION_TEST.MissingAtSymbol 1 0.00577893
+EMAIL_VALIDATION_TEST.DuplicateAtSymbol 1 0.00486309
+EMAIL_VALIDATION_TEST.EmptyLocalOrDomain 1 0.00329558
+EMAIL_VALIDATION_TEST.DuplicateDots 1 0.00875079
+EMAIL_VALIDATION_TEST.TooLongLocal 1 0.00654612
+EMAIL_VALIDATION_TEST.TooLongDomain 1 0.00535438
+EMAIL_VALIDATION_TEST.DotBeforeAt 1 0.0084036
+EMAIL_VALIDATION_TEST.DotAtLast 1 0.00462193
+EMAIL_VALIDATION_TEST.EdgeCaseValidEmails 1 0.00707368
+Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 07-00 00-00 00-00 00-00 20-75 6A-6A 77-61 6C-00 74-65 73-74 73-00 70-2F E0-62 9C-11 A9-55 00-00 06-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 00-70 00-00 00-00 00-00 00-00> 1 0.0058407
+Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 08-00 00-00 00-00 00-00 76-65 72-6D 61-20 20-20 00-65 73-74 73-00 70-2F E0-62 9C-11 A9-55 00-00 05-00 00-00 00-00 00-00 76-65 72-6D 61-00 00-70 00-00 00-00 00-00 00-00> 1 0.00774367
+Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 70-2F E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00> 1 0.00681154
+Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <A0-90 9C-11 A9-55 00-00 13-00 00-00 00-00 00-00 13-00 00-00 00-00 00-00 65-72 6D-61 00-00 70-2F E0-62 9C-11 A9-55 00-00 0D-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 2E-00 00-00> 1 0.00431285
+Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <C0-62 9C-11 A9-55 00-00 0F-00 00-00 00-00 00-00 20-20 20-75 6A-6A 77-61 6C-20 76-65 72-6D 61-00 E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00> 1 0.00805063
+Trimtest/TrimTestCheck.HandledTrimmedStrings/64-byte object <30-B1 9C-11 A9-55 00-00 11-00 00-00 00-00 00-00 11-00 00-00 00-00 00-00 6C-20 76-65 72-6D 61-00 E0-62 9C-11 A9-55 00-00 0C-00 00-00 00-00 00-00 75-6A 6A-77 61-6C 20-76 65-72 6D-61 00-00 00-00> 1 0.0060269
+NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_0_ujjwalverma  # GetParam() = "ujjwalverma" 1 0.00459099
+NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_1_ujjwalvermadata_axle_com  # GetParam() = "ujjwalvermadata-axle.com" 1 0.00612633
+NoDotNoAtTest/Email_Validation_NoDot.NoDotNoAt/Case_2_ujjwalverma_com  # GetParam() = "ujjwalverma@com" 1 0.00419602
+InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/ujjwal_varma_gmail_com  # GetParam() = "ujjwal$varma@gmail.com" 1 0.00322606
+InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/user_name_yahoo_com  # GetParam() = "user!name@yahoo.com" 1 0.00612663
+InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/test_email_outlook_com  # GetParam() = "test%email@outlook.com" 1 0.00416625
+InvalidEmailTest/Email_Validation_InvalidCharacters.InvalidEmail/hello_world_gmail_com  # GetParam() = "hello world@gmail.com" 1 0.00705579
+Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"ujjwal@gmail.c" 1 0.00614185
+Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"user@domain.a" 1 0.00359893
+Email_Validation_TLD_Test/Email_Validation_TLD_Short.Email_Validation_Short_TLD/"name@sub.domain.x" 1 0.00680138
+ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/ujjwalvarma6948_gmail_com  # GetParam() = "ujjwalvarma6948@gmail.com" 1 0.00464023
+ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_123_outlook_com  # GetParam() = "user_name-123@outlook.com" 1 0.0064229
+ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/first_last_data_axle_com  # GetParam() = "first.last@data-axle.com" 1 0.00548621
+ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/simple_example_com  # GetParam() = "simple@example.com" 1 0.00370619
+ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/user_name_with_dots_gmail_com  # GetParam() = "user.name_with-dots@gmail.com" 1 0.00399091
+ValidDomainTest/EMAIL_VALIDATION_FOR_DOMAIN.VALID_DOMAIN_TEST/firstname_lastname_outlook_com  # GetParam() = "firstname.lastname@outlook.com" 1 0.00289389
+---
