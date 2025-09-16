@@ -1,12 +1,11 @@
 from airflow import DAG
-from airflow.operators.python import PythonOperator
-from airflow.operators.empty import EmptyOperator
+from airflow.providers.standard.operators.python import PythonOperator, BranchPythonOperator
+from airflow.providers.standard.operators.empty import EmptyOperator
 from airflow.providers.docker.operators.docker import DockerOperator
-from airflow.operators.python import BranchPythonOperator
 from docker.types import Mount
 from common.libs import s3_utils,kafka_utils,progress
 from datetime import datetime
-import subprocess
+import subprocess 
 import pandas as pd,os,tempfile,json
 
 BUCKET="raw"
@@ -22,7 +21,7 @@ DEFAULT_OUTPUT_TOPIC="email-validation-output"
 with DAG(
     dag_id="email_validation_dag",
     start_date=datetime(2025,1,1),
-    schedule_interval=None,
+    schedule=None,
     catchup=False,
     tags=["enrichment"],
     params={
@@ -41,7 +40,7 @@ with DAG(
         task_id="validate_emails", 
         image="email_validation_image",
         api_version="auto",
-        auto_remove=True,
+        auto_remove="never",
         command="python /opt/airflow/dags/email_validation/enrich_email_run.py",
         docker_url="unix://var/run/docker.sock",
         network_mode="final-bulk-enrichment-v2_airflow_network",
@@ -67,7 +66,7 @@ with DAG(
         task_id="realtime_validate_emails",
         image="email_validation_image",
         api_version="auto",
-        auto_remove=True,
+        auto_remove="never",
         command="python /opt/airflow/dags/email_validation/enrich_email_run.py",
         docker_url="unix://var/run/docker.sock",
         network_mode="final-bulk-enrichment-v2_airflow_network",
@@ -113,7 +112,6 @@ with DAG(
     branch=BranchPythonOperator(
         task_id="branch_mode",
         python_callable=choose_mode,
-        provide_context=True
     )
 
     end=EmptyOperator(task_id="end",trigger_rule="none_failed_min_one_success")

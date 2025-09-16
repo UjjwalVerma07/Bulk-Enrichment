@@ -81,7 +81,7 @@ def upload_gender_master_csv():
 with DAG(
     dag_id="init_input_dag",
     start_date=datetime(2025, 1, 1),
-    schedule_interval=None,  # Run only manually
+    schedule=None,  # Run only manually
     catchup=False,
     tags=["setup"],
 ) as dag:

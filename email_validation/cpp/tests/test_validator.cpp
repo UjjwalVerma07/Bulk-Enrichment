@@ -29,6 +29,7 @@ class TrimTestCheck:public testing::TestWithParam<TrimTestCase>{};
 TEST_P(TrimTestCheck,HandledTrimmedStrings){
     TrimTestCase param=GetParam();
     EXPECT_EQ(trim(param.input),param.expected);
+
 }
 INSTANTIATE_TEST_SUITE_P(Trimtest,TrimTestCheck,testing::Values(
     TrimTestCase{" ujjwal","ujjwal"},
@@ -38,8 +39,6 @@ INSTANTIATE_TEST_SUITE_P(Trimtest,TrimTestCheck,testing::Values(
     TrimTestCase{"   ujjwal verma","ujjwal verma"},
     TrimTestCase{"ujjwal verma     ","ujjwal verma"}
 ));
-
-
 
 
 //TESTCASES FOR THE isValid Functions with Different Scenario;

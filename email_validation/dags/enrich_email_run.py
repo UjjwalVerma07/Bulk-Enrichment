@@ -1,7 +1,7 @@
 import sys
 from airflow import DAG
-from airflow.operators.python import PythonOperator
-from airflow.operators.empty import EmptyOperator
+from airflow.providers.standard.operators.python import PythonOperator
+from airflow.providers.standard.operators.empty import EmptyOperator
 from common.libs import s3_utils,kafka_utils,progress
 from datetime import datetime
 import subprocess

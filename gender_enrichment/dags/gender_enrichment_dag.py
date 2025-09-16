@@ -1,7 +1,6 @@
 from airflow import DAG
-from airflow.operators.python import PythonOperator
-from airflow.operators.python import BranchPythonOperator
-from airflow.operators.empty import EmptyOperator
+from airflow.providers.standard.operators.python import PythonOperator, BranchPythonOperator
+from airflow.providers.standard.operators.empty import EmptyOperator
 from common.libs import s3_utils,kafka_utils,progress
 from datetime import datetime
 import subprocess
@@ -23,7 +22,7 @@ DEFAULT_OUTPUT_TOPIC="gender-enrich-output"
 
 with DAG(
     dag_id="gender_enrichment_dag",
-    schedule_interval=None,
+    schedule=None,
     start_date=datetime(2025,1,1),
     catchup=False, 
     tags=["gender_enrichment"],
@@ -43,7 +42,7 @@ with DAG(
         task_id="gender_enrich_task",
         image="gender_enrichment_image",
         api_version="auto",
-        auto_remove=False,
+        auto_remove="never",
         command="python /opt/airflow/dags/gender_enrichment/enrich_gender_run.py",
         docker_url="unix://var/run/docker.sock",
         network_mode="final-bulk-enrichment-v2_airflow_network",
@@ -67,7 +66,7 @@ with DAG(
         task_id="realtime_gender_enrichment_task",
         image="gender_enrichment_image",
         api_version="auto",
-        auto_remove=False,
+        auto_remove="never",
         command="python /opt/airflow/dags/gender_enrichment/enrich_gender_run.py",
         docker_url="unix://var/run/docker.sock",
         network_mode="final-bulk-enrichment-v2_airflow_network",
@@ -111,8 +110,7 @@ with DAG(
     
     branch=BranchPythonOperator(
         task_id="branch_mode",
-        python_callable=choose_mode,
-        provide_context=True
+        python_callable=choose_mode
     )
 
     end=EmptyOperator(task_id="end",trigger_rule="none_failed_min_one_success")

@@ -1,9 +1,8 @@
 from airflow import DAG
-from airflow.operators.python import PythonOperator
-from airflow.operators.empty import EmptyOperator
+from airflow.providers.standard.operators.python import PythonOperator, BranchPythonOperator
+from airflow.providers.standard.operators.empty import EmptyOperator
 from docker.types import Mount
 from airflow.providers.docker.operators.docker import DockerOperator
-from airflow.operators.python import BranchPythonOperator
 from common.libs import s3_utils,kafka_utils,progress
 from datetime import datetime
 import subprocess
@@ -25,7 +24,7 @@ DEFAULT_OUTPUT_TOPIC="reverse-geocode-output"
 
 with DAG(
     dag_id="reverse_geocode_dag",
-    schedule_interval=None,
+    schedule=None,
     start_date=datetime(2025,1,1),
     catchup=False,
     tags=["Test-enrichment"],
@@ -47,7 +46,7 @@ with DAG(
         task_id="reverse_geocode_task",
         image="reverse_geocode_image",
         api_version="auto",
-        auto_remove=False,
+        auto_remove="never",
         command="python /opt/airflow/dags/reverse_geocode/reverse_geocode_run.py",
         docker_url="unix://var/run/docker.sock",
         network_mode="final-bulk-enrichment-v2_airflow_network",
@@ -74,7 +73,7 @@ with DAG(
         task_id="realtime_reverse_geocode",
         image="reverse_geocode_image",
         api_version="auto",
-        auto_remove=False,
+        auto_remove="never",
         command="python /opt/airflow/dags/reverse_geocode/reverse_geocode_run.py",
         docker_url="unix://var/run/docker.sock",
         network_mode="final-bulk-enrichment-v2_airflow_network",
@@ -118,8 +117,7 @@ with DAG(
     
     branch=BranchPythonOperator(
         task_id="branch_mode",
-        python_callable=choose_mode,
-        provide_context=True
+        python_callable=choose_mode
     )
 
     end=EmptyOperator(task_id="end",trigger_rule="none_failed_min_one_success")

@@ -296,8 +296,8 @@ from datetime import datetime
 import os
 import tempfile
 from airflow import DAG
-from airflow.operators.empty import EmptyOperator
-from airflow.operators.python import PythonOperator, BranchPythonOperator
+from airflow.providers.standard.operators.python import PythonOperator, BranchPythonOperator
+from airflow.providers.standard.operators.empty import EmptyOperator
 from kafka import KafkaConsumer
 import yaml, json, time
 from common.libs import kafka_utils,s3_utils,progress
@@ -594,7 +594,7 @@ def extract_pipelines(ti):
 with DAG(
     dag_id="orchestrator_dag",
     start_date=datetime(2025, 1, 1),
-    schedule_interval=None,
+    schedule=None,
     catchup=False,
     tags=["orchestrator"]
 ) as dag:
