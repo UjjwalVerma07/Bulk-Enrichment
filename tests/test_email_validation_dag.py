@@ -4,6 +4,12 @@ from airflow.providers.standard.operators.empty import EmptyOperator
 from airflow.providers.standard.operators.python import BranchPythonOperator
 from airflow.providers.docker.operators.docker import DockerOperator 
 from email_validation.dags.email_validation_dag import choose_mode
+from unittest.mock import MagicMock,patch
+from airflow.utils.state import State
+from airflow.utils.types import DagRunType
+from datetime import datetime
+import pendulum
+import uuid
 @pytest.fixture(scope="session")
 def dag_bag():
     return DagBag(dag_folder="email_validation/dags",include_examples=False);
@@ -69,7 +75,7 @@ def test_dag_params(dag_bag):
 
           
 
-
+#-------------Unit Testing------------------
 def test_choose_mode_batch():
     context={"params":{"mode":"batch"}}
     result=choose_mode(**context)
@@ -109,4 +115,56 @@ def test_realtime_reverse_geocode_docker_config(dag_bag):
     assert realtime_email_validation_task.mount_tmp_dir==False,"mount tmp dir should be False"
 
 
+@patch("airflow.providers.docker.operators.docker.DockerHook")
+def test_email_validation_docker_executed(mock_docker_hook,dag_bag):
+    dag=dag_bag.get_dag(dag_id="email_validation_dag")
+    task:DockerOperator=dag.get_task("validate_emails")
+    #Mock Docker Hook and API Client
+    mock_hook_instance=MagicMock()
+    mock_docker_hook.return_value=mock_hook_instance
 
+    #Mock API Client
+    mock_client=MagicMock()
+    mock_hook_instance.api_client=mock_client
+
+    #Mock container operations
+    mock_client.create_container.return_value={"Id":"test123"}
+    mock_client.start.return_value=None
+    mock_client.wait.return_value={"StatusCode":0}
+    mock_client.logs.return_value=[b"Task completed successfully"]
+    mock_client.remove_container.return_value=None
+
+    #Mock other require hook methods
+    mock_hook_instance.get_conn.return_value=mock_client
+    #Test Execution
+    result=task.execute(context={"task_instance":MagicMock()})
+    mock_docker_hook.assert_called_once()
+    assert result is None or isinstance(result,str)
+
+@patch("airflow.providers.docker.operators.docker.DockerHook")
+def test_realtime_email_validation_docker_executed(mock_docker_hook,dag_bag):
+    dag=dag_bag.get_dag(dag_id="email_validation_dag")
+    task:DockerOperator=dag.get_task("realtime_validate_emails")
+
+    #MOck Docker Hook and API Client
+    mock_hook_instance=MagicMock()
+    mock_docker_hook.return_value=mock_hook_instance
+
+    #Mock API Client
+    mock_client=MagicMock()
+    mock_hook_instance.api_client=mock_client
+
+    #Mock container operations
+    mock_client.create_container.return_value={"Id":"test456"}
+    mock_client.start.return_value=None
+    mock_client.wait.return_value={"StatusCode":0}
+    mock_client.logs.return_value=[b"Realtime Task completed successfully"]
+    mock_client.remove_container.return_value=None
+
+    #Mock other require hook Methods
+    mock_hook_instance.get_conn.return_value=mock_client
+
+    #Test Execution
+    result=task.execute(context={"task_instance":MagicMock()})
+    mock_docker_hook.assert_called_once()
+    assert result is None or isinstance(result,str)
