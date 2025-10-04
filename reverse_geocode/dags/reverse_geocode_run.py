@@ -73,8 +73,9 @@ def run_reverse_geocode(input_bucket=DEFAULT_INPUT_BUCKET, input_key=DEFAULT_INP
  
     try:
         # Step 1 - Download the input file 
-        s3_utils.download_file(input_bucket, input_key, LOCAL_INPUT)
-
+        # s3_utils.download_file(input_bucket, input_key, LOCAL_INPUT)
+        
+        s3_utils.download_file(input_bucket,input_key, LOCAL_INPUT)
         # Step 2 - Download the geo_master file from S3
         s3_utils.download_file(BUCKET, GEO_MASTER_CSV, LOCAL_GEO_MASTER_CSV)
 
@@ -90,6 +91,7 @@ def run_reverse_geocode(input_bucket=DEFAULT_INPUT_BUCKET, input_key=DEFAULT_INP
         # Upload output
         s3_utils.upload_file(out_bucket, out_key, LOCAL_OUTPUT)
         send_status("reverse_geocode","Succeeded")
+        
 
     except Exception as e:
         error_msg = str(e)

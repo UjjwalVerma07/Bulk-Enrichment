@@ -1,14 +1,14 @@
 from airflow import DAG
-from airflow.providers.standard.operators.python import PythonOperator, BranchPythonOperator
-from airflow.providers.standard.operators.empty import EmptyOperator
+from airflow.operators.python import PythonOperator, BranchPythonOperator
+from airflow.operators.empty import EmptyOperator
 from docker.types import Mount
 from airflow.providers.docker.operators.docker import DockerOperator
-from common.libs import s3_utils,kafka_utils,progress
+from common.libs import s3_utils, kafka_utils, progress
+from common.libs.notification_utils import send_failure_email, send_success_email, send_slack_failure, send_slack_success
 from datetime import datetime
 import subprocess
-import pandas as pd,os,tempfile,json
+import pandas as pd, os, tempfile, json
 from airflow.models import Variable
-
 
 BUCKET = "raw"
 LOCAL_INPUT="/samples/input/reverse_geocode.csv"
@@ -22,12 +22,36 @@ DEFAULT_OUT_KEY="reverse_geocode_enriched.csv"
 DEFAULT_INPUT_TOPIC="reverse-geocode-input"
 DEFAULT_OUTPUT_TOPIC="reverse-geocode-output"
 
+# Wrapper functions to call both email and Slack notifications
+def notify_failure(context):
+    """Send both email and Slack notifications on failure"""
+    send_failure_email(context)
+    send_slack_failure(context)
+
+def notify_success(context):
+    """Send both email and Slack notifications on success"""
+    send_success_email(context)
+    send_slack_success(context)
+
+# Default args with both Email and Slack notifications
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'email_on_failure': True,
+    'email_on_retry': False,
+    'email_on_success': True,
+    # 'retries': 1,
+    'on_failure_callback': notify_failure,  # Calls both email and Slack
+    'on_success_callback': notify_success   # Calls both email and Slack
+}
+
 with DAG(
     dag_id="reverse_geocode_dag",
     schedule=None,
     start_date=datetime(2025,1,1),
     catchup=False,
     tags=["Test-enrichment"],
+    default_args=default_args,
     params={
         "mode":"batch",
         "input_bucket": DEFAULT_INPUT_BUCKET,

@@ -1,10 +1,10 @@
 id,name,email,latitude,longitude
 1,Amit,amit@example.com,28.6139,77.2090
 2,Neha,neha@example.com,19.0760,72.8777
-3,Ravi,ravi@example.com,12.9716,77.5946
+3,Ravi,ravi@gmail.com,12.9716,77.5946
 4,Divya,divya@example.com.,13.0827,80.2707
-5,Sohan,sohan@example.com,22.5726,88.3639
-6,Kiran,kiran@example.com,28.7041,77.1025
+5,Sohan,sohan@outlook.com,22.5726,88.3639
+6,Kiran,kiran@wizard.com,28.7041,77.1025
 7,Priya,priya@example.com,17.3850,78.4867
 8,Arjun,arjun@example.com,23.2599,77.4126
 9,Anita,anita@example.com,26.9124,75.7873

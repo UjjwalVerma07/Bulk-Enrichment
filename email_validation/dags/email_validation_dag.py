@@ -1,12 +1,13 @@
 from airflow import DAG
-from airflow.providers.standard.operators.python import PythonOperator, BranchPythonOperator
-from airflow.providers.standard.operators.empty import EmptyOperator
+from airflow.operators.python import PythonOperator, BranchPythonOperator
+from airflow.operators.empty import EmptyOperator
 from airflow.providers.docker.operators.docker import DockerOperator
 from docker.types import Mount
 from common.libs import s3_utils,kafka_utils,progress
 from datetime import datetime
 import subprocess 
 import pandas as pd,os,tempfile,json
+from common.libs.notification_utils import notify_success, send_failure_email,send_success_email,send_slack_success,send_slack_failure
 
 BUCKET="raw"
 LOCAL_INPUT="/samples/input/customer_raw.csv"
@@ -18,12 +19,35 @@ DEFAULT_OUT_KEY="email_validated.csv"
 DEFAULT_INPUT_TOPIC="email-validation-input"
 DEFAULT_OUTPUT_TOPIC="email-validation-output"
 
+#Wrapper functions to call both email and Slack notifications
+def notify_failure(context):
+    """Send both email and Slack notification on failure"""
+    send_failure_email(context)
+    send_slack_failure(context)
+
+def notify_success(context):
+    """Send both email and Slack notification on success"""
+    send_success_email(context)
+    send_slack_success(context)
+
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'email_on_failure': True,
+    'email_on_retry': False,
+    'email_on_success': True,
+    'retries': 1,
+    'on_failure_callback': notify_failure,
+    'on_success_callback': notify_success
+}
+
 with DAG(
     dag_id="email_validation_dag",
     start_date=datetime(2025,1,1),
     schedule=None,
     catchup=False,
     tags=["enrichment"],
+    default_args=default_args,
     params={
         "mode":"batch",
         "input_bucket": DEFAULT_INPUT_BUCKET,
