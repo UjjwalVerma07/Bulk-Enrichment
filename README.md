@@ -21,7 +21,10 @@ The pipeline supports **both batch and real-time stream processing** with isolat
   Fully streaming architecture. Data flows **Kafka → DAG → Kafka/S3** without intermediate local storage.  
 
 - **Progress Tracking**  
-  Each stage sends progress events to Kafka (`pipeline-progress`) and updates `progress.json` in S3.  
+  Each stage sends progress events to Kafka (`pipeline-progress`) and updates `progress.json` in S3.
+
+- **🆕 OpenLineage Data Lineage**  
+  Full data lineage tracking with **Marquez** backend. Track data flows across S3 and Kafka, view lineage graphs, and maintain audit trails for compliance. See [OpenLineage Integration Guide](OPENLINEAGE_INTEGRATION_GUIDE.md) for details.  
 
 ---
 
@@ -181,6 +184,63 @@ After processing the dummy input above, you should get:
 
 ---
 
+## OpenLineage & Data Lineage
+
+This pipeline includes comprehensive **OpenLineage** integration for tracking data lineage with **Marquez** as the backend.
+
+### Features:
+- ✅ Track data flows across S3 buckets and Kafka topics
+- ✅ Schema evolution tracking
+- ✅ Job run history and performance metrics
+- ✅ Visual lineage graphs in Marquez UI
+- ✅ Audit trails for compliance
+- ✅ Error tracking and debugging support
+
+### Quick Start:
+
+1. **Start Marquez** (in separate terminal):
+```bash
+cd marquez
+./docker/up.sh --db-port 2345
+```
+
+2. **Access Marquez UI**: http://localhost:3000
+
+3. **View Lineage**: After running DAGs, explore:
+   - Jobs: `reverse_geocode_batch`, `reverse_geocode_stream`
+   - Datasets: S3 buckets and Kafka topics
+   - Lineage graphs showing data flow
+
+### Documentation:
+- 📘 [OpenLineage Integration Guide](OPENLINEAGE_INTEGRATION_GUIDE.md) - How to add lineage to your DAGs
+- 📘 [Reverse Geocode OpenLineage README](reverse_geocode/OPENLINEAGE_README.md) - Detailed implementation example
+
+### Example Lineage Flow:
+
+```
+┌─────────────────┐
+│  S3: raw/       │
+│  customer_raw   │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐      ┌──────────────────┐
+│  Reverse        │─────▶│  S3: enriched/   │
+│  Geocode Job    │      │  geo_enriched    │
+└────────┬────────┘      └──────────────────┘
+         │
+         │ (uses)
+         ▼
+┌─────────────────┐
+│  S3: raw/       │
+│  geo_master.csv │
+└─────────────────┘
+```
+
+---
+
 ## Notes
 - Each enrichment DAG can be run independently or orchestrated together.  
-- Airflow UI can be used to trigger the orchestrator DAG manually.  
+- Airflow UI can be used to trigger the orchestrator DAG manually.
+- OpenLineage events are automatically sent to Marquez for all DAG runs.
+- Check task logs for OpenLineage event confirmations: `✓ OpenLineage START event sent successfully`  

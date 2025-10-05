@@ -9,25 +9,12 @@ from airflow.providers.slack.hooks.slack_webhook import SlackWebhookHook
 from sqlalchemy.sql.coercions import expect
 
 
-
 def send_slack_message(message: str, color: str = "#36a64f"):
-    """
-    Send message to Slack using SlackWebhookHook.
-    Uses Airflow Connection 'slack_webhook' (created via Airflow UI or CLI).
-    Compatible with apache-airflow-providers-slack >= 8.0.0
-    """
+ 
     try:
-        # Create SlackWebhookHook using the connection ID
-        # The connection should be set up in Airflow UI: Admin -> Connections
-        # Connection ID: slack_webhook
-        # Connection Type: HTTP
-        # Host: https://hooks.slack.com/services
-        # Password: YOUR_WEBHOOK_TOKEN (e.g., T09JHVB4FPV/B09KJKSFX6C/...)
         hook = SlackWebhookHook(
-            slack_webhook_conn_id="slack_webhook"  # Connection ID we created
+            slack_webhook_conn_id="slack_webhook"
         )
-        
-        # Send the message using the .send() method
         hook.send(
             text=message,
             username="Airflow Bot",
@@ -63,7 +50,7 @@ def send_slack_failure(context):
     send_slack_message(message,color="#d32f2f")
 
 def send_slack_success(context):
-    task_instance=context.get('task_instance')  # Fixed typo: task_instance not task_intance
+    task_instance=context.get('task_instance') 
     dag_id=context.get('dag').dag_id
     task_id=task_instance.task_id
     execution_date=context.get('execution_date')
@@ -176,7 +163,6 @@ def send_failure_email(context):
         print(f"✅ Failure notification sent to: {', '.join(to_emails)}")
     except Exception as e:
         print(f"❌ Failed to send email notification: {str(e)}")
-        # Log but don't fail the DAG on email failure
 
 
 def send_success_email(context):
@@ -329,10 +315,6 @@ DEFAULT_NOTIFICATION_ARGS = {
     'email_on_failure': True,
     'email_on_retry': False,
     'retries': 2,
-    'on_failure_callback': notify_failure,  # ✅ Calls both email and Slack
-    # Uncomment to enable success notifications:
-    # 'on_success_callback': notify_success,
-    # Uncomment to enable retry notifications:
-    # 'on_retry_callback': send_retry_email,
+    'on_failure_callback': notify_failure, 
 }
 

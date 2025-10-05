@@ -3,6 +3,7 @@ from airflow.operators.python import PythonOperator, BranchPythonOperator
 from airflow.operators.empty import EmptyOperator
 from docker.types import Mount
 from airflow.providers.docker.operators.docker import DockerOperator
+from airflow.lineage.entities import File
 from common.libs import s3_utils, kafka_utils, progress
 from common.libs.notification_utils import send_failure_email, send_success_email, send_slack_failure, send_slack_success
 from datetime import datetime
@@ -21,6 +22,17 @@ DEFAULT_OUT_BUCKET="enriched"
 DEFAULT_OUT_KEY="reverse_geocode_enriched.csv"
 DEFAULT_INPUT_TOPIC="reverse-geocode-input"
 DEFAULT_OUTPUT_TOPIC="reverse-geocode-output"
+
+# Helper function to create lineage entities for OpenLineage
+def create_s3_lineage_entity(bucket: str, key: str) -> File:
+    """Create a File lineage entity for S3 objects."""
+    s3_endpoint = os.getenv("S3_ENDPOINT", "http://minio:9000")
+    return File(url=f"s3://{bucket}/{key}")
+
+def create_kafka_lineage_entity(topic: str) -> File:
+    """Create a File lineage entity for Kafka topics."""
+    kafka_broker = os.getenv("KAFKA_BROKER", "kafka:9092")
+    return File(url=f"kafka://{kafka_broker}/{topic}")
 
 # Wrapper functions to call both email and Slack notifications
 def notify_failure(context):
@@ -50,7 +62,7 @@ with DAG(
     schedule=None,
     start_date=datetime(2025,1,1),
     catchup=False,
-    tags=["Test-enrichment"],
+    tags=["Test-enrichment", "openlineage"],
     default_args=default_args,
     params={
         "mode":"batch",
@@ -61,7 +73,10 @@ with DAG(
         "input_topic":DEFAULT_INPUT_TOPIC,
         "output_topic":DEFAULT_OUTPUT_TOPIC
     },
-    max_active_runs=5
+    max_active_runs=5,
+    description="Reverse geocoding enrichment pipeline with OpenLineage tracking. "
+                "Enriches latitude/longitude data with city information from reference dataset. "
+                "Supports both batch (S3) and streaming (Kafka) modes."
 ) as dag:
     
     start=EmptyOperator(task_id="start")
@@ -78,18 +93,45 @@ with DAG(
             "MODE": "{{ dag_run.conf.get('mode', params.mode) }}",
             "KAFKA_BROKER": "kafka:9092",
             "S3_ENDPOINT": "http://minio:9000",
+            "OPENLINEAGE_URL": "http://host.docker.internal:5000",
+            "OPENLINEAGE_NAMESPACE": "airflow",
             "INPUT_BUCKET": "{{ dag_run.conf.get('input_bucket', params.input_bucket) }}",
             "INPUT_KEY": "{{ dag_run.conf.get('input_key', params.input_key) }}",
             "OUT_BUCKET": "{{ dag_run.conf.get('out_bucket', params.out_bucket) }}",
             "OUT_KEY": "{{ dag_run.conf.get('out_key', params.out_key) }}"
         },
-           mounts=[
+        mounts=[
         # Mount(source="/Users/uverma/bulk-enrichment/reverse_geocode", target="/opt/airflow/dags/reverse_geocode", type="bind"),
         Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/reverse_geocode/data", target="/reverse_geocode/data", type="bind"),
         Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/input", target="/samples/input", type="bind"),
         Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/output", target="/samples/output", type="bind"),
-    ],
-        mount_tmp_dir=False 
+        ],
+        mount_tmp_dir=False,
+        # OpenLineage inlets and outlets for automatic lineage tracking
+        inlets=[
+            create_s3_lineage_entity(DEFAULT_INPUT_BUCKET, DEFAULT_INPUT_KEY),
+            create_s3_lineage_entity(BUCKET, GEO_MASTER_CSV)
+        ],
+        outlets=[
+            create_s3_lineage_entity(DEFAULT_OUT_BUCKET, DEFAULT_OUT_KEY)
+        ],
+        doc_md="""
+        ### Reverse Geocode Batch Task
+        
+        This task enriches input data with city information based on latitude and longitude coordinates.
+        
+        **Inputs:**
+        - S3 Input: `{{ params.input_bucket }}/{{ params.input_key }}`
+        - Reference Data: `raw/reference/geo_master.csv`
+        
+        **Output:**
+        - S3 Output: `{{ params.out_bucket }}/{{ params.out_key }}`
+        
+        **Processing:**
+        - Performs left join on latitude/longitude
+        - Fills missing cities with "Unknown"
+        - Tracks lineage via OpenLineage to Marquez
+        """
     )
 
 
@@ -105,6 +147,8 @@ with DAG(
             "MODE": "{{ dag_run.conf.get('mode', params.mode) }}",
             "KAFKA_BROKER": "kafka:9092",
             "S3_ENDPOINT": "http://minio:9000",
+            "OPENLINEAGE_URL": "http://host.docker.internal:5000",
+            "OPENLINEAGE_NAMESPACE": "airflow",
             # In realtime mode, INPUT/OUTPUT may not be used, Kafka messages are consumed directly
             "INPUT_TOPIC": "{{ dag_run.conf.get('input_topic', params.input_topic) }}",
             "OUTPUT_TOPIC": "{{ dag_run.conf.get('out_topic', params.output_topic) }}"
@@ -114,7 +158,34 @@ with DAG(
             Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/input", target="/samples/input", type="bind"),
             Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/output", target="/samples/output", type="bind"),
         ],
-        mount_tmp_dir=False
+        mount_tmp_dir=False,
+        # OpenLineage inlets and outlets for streaming mode
+        inlets=[
+            create_kafka_lineage_entity(DEFAULT_INPUT_TOPIC),
+            create_s3_lineage_entity(BUCKET, GEO_MASTER_CSV)
+        ],
+        outlets=[
+            create_kafka_lineage_entity(DEFAULT_OUTPUT_TOPIC)
+        ],
+        doc_md="""
+        ### Reverse Geocode Streaming Task
+        
+        This task enriches streaming data with city information based on latitude and longitude coordinates.
+        
+        **Inputs:**
+        - Kafka Input Topic: `{{ params.input_topic }}`
+        - Reference Data: `raw/reference/geo_master.csv`
+        
+        **Output:**
+        - Kafka Output Topic: `{{ params.output_topic }}`
+        
+        **Processing:**
+        - Consumes records from Kafka in micro-batches
+        - Performs left join on latitude/longitude
+        - Fills missing cities with "Unknown"
+        - Falls back to batch mode if CAP_SIZE exceeded
+        - Tracks lineage via OpenLineage to Marquez
+        """
     )
 
 
@@ -136,7 +207,7 @@ with DAG(
         if mode=="batch":
             return "reverse_geocode_task"
         else:
-            return "realtime_reverse_geocode"
+            return "realtime_reverse_geocode" 
 
     
     branch=BranchPythonOperator(

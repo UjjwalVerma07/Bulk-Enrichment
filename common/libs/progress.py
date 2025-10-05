@@ -8,17 +8,14 @@ def upload_progress_file(bucket_name, progress_name, progress_data):
 
     events = []
     try:
-        # Try fetching existing progress file
         obj = s3.get_object(Bucket=bucket_name, Key=key)
         existing_data = json.loads(obj["Body"].read())
         
-        # If it's a list, use it directly; else wrap it in a list
         if isinstance(existing_data, list):
             events = existing_data
         else:
             events = [existing_data]
     except s3.exceptions.NoSuchKey:
-        # File doesn't exist yet, start fresh
         events = []
     
     # Append new event

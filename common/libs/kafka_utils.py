@@ -1,10 +1,7 @@
 from kafka import KafkaProducer,KafkaConsumer;
 import json,os
 KAFKA_BROKER=os.getenv("KAFKA_BROKER","kafka:9092")
-# def get_producer():
-#     producer=KafkaProducer(bootstrap_servers=KAFKA_BROKER,
-#                            value_serializer=lambda v:json.dumps(v).encode("utf-8"))
-#     return producer
+
 
 import time
 from kafka.errors import NoBrokersAvailable

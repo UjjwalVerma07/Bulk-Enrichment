@@ -8,7 +8,7 @@ import pandas as pd,os,tempfile,json
 from airflow.providers.docker.operators.docker import DockerOperator
 from docker.types import Mount
 from common.libs.notification_utils import send_failure_email, send_success_email,send_slack_failure,send_slack_success
-
+from airflow.lineage.entities import File
 BUCKET="raw"
 LOCAL_INPUT="/samples/input/gender_enrichment.csv"
 LOCAL_OUTPUT="/samples/output/final_enriched.csv"
@@ -20,6 +20,14 @@ DEFAULT_OUT_BUCKET="enriched"
 DEFAULT_OUT_KEY="gender_enriched.csv"
 DEFAULT_INPUT_TOPIC="gender-enrich-input"
 DEFAULT_OUTPUT_TOPIC="gender-enrich-output"
+
+def create_s3_lineage_entity(bucket:str,key:str) -> File:
+    s3_endpoint=os.getenv("S3_ENDPOINT","http://minio:9000")
+    return File(url=f"s3://{bucket}/{key}")
+
+def create_kafka_lineage_entity(topic:str) -> File:
+    kafka_broker=os.getenv("KAFKA_BROKER","kafka:9092")
+    return File(url=f"kafka://{kafka_broker}/{topic}")
 
 #Wrapper functions to call both email and Slack notifications
 def notify_failure(context):
@@ -39,7 +47,6 @@ default_args = {
     'email_on_failure': True,
     'email_on_retry': False,
     'email_on_success': True,
-    'retries': 1,
     'on_failure_callback':notify_failure ,
     'on_success_callback': notify_success
 }
@@ -84,7 +91,31 @@ with DAG(
         Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/input", target="/samples/input", type="bind"),
         Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/output", target="/samples/output", type="bind"),
         ],
-        mount_tmp_dir=False
+        mount_tmp_dir=False,
+        inlets=[
+            create_s3_lineage_entity(DEFAULT_INPUT_BUCKET, DEFAULT_INPUT_KEY),
+            create_s3_lineage_entity(BUCKET, GENDER_MASTER_CSV)
+        ],
+        outlets=[
+            create_s3_lineage_entity(DEFAULT_OUT_BUCKET, DEFAULT_OUT_KEY)
+        ],
+        doc_md="""
+        ### Gender Enrichment Batch Task
+
+        This task enriches input data with gender information based on name.
+        
+        **Inputs:**
+        - S3 Input: `{{ params.input_bucket }}/{{ params.input_key }}`
+        - Reference Data: `raw/reference/gender_master.csv`
+        
+        **Output:**
+        - S3 Output: `{{ params.out_bucket }}/{{ params.out_key }}`
+        
+        **Processing:**
+        - Performs left join on name
+        - Fills missing gender with "Unknown"
+        - Tracks lineage via OpenLineage to Marquez
+        """
     )
 
     realtime_gender_enrichment_task=DockerOperator(
@@ -107,7 +138,23 @@ with DAG(
             Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/input", target="/samples/input", type="bind"),
             Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/output", target="/samples/output", type="bind"),
         ],
-        mount_tmp_dir=False
+        mount_tmp_dir=False,
+        inlets=[
+            create_kafka_lineage_entity(DEFAULT_INPUT_TOPIC),
+            create_s3_lineage_entity(BUCKET, GENDER_MASTER_CSV)
+        ],
+        outlets=[
+            create_kafka_lineage_entity(DEFAULT_OUTPUT_TOPIC)
+        ],
+        doc_md="""
+        ### Gender Enrichment Streaming Task
+        
+        This task enriches streaming data with gender information based on name.
+        
+        **Inputs:**
+        - Kafka Input Topic: `{{ params.input_topic }}`
+        - Reference Data: `raw/reference/gender_master.csv`
+        """
     )
 
 
