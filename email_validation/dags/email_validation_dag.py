@@ -8,6 +8,8 @@ from datetime import datetime
 import subprocess 
 import pandas as pd,os,tempfile,json
 from common.libs.notification_utils import notify_success, send_failure_email,send_success_email,send_slack_success,send_slack_failure
+from airflow.lineage.entities import File
+from common.libs.openlineage_utils import OpenLineageClient,create_output_statistics_facet,add_output_statistics_to_dataset
 
 BUCKET="raw"
 LOCAL_INPUT="/samples/input/customer_raw.csv"
@@ -18,6 +20,15 @@ DEFAULT_OUT_BUCKET="enriched"
 DEFAULT_OUT_KEY="email_validated.csv"
 DEFAULT_INPUT_TOPIC="email-validation-input"
 DEFAULT_OUTPUT_TOPIC="email-validation-output"
+
+def create_s3_lineage_entity(bucket:str,key:str) -> File:
+    s3_endpoint=os.getenv("S3_ENDPOINT","http://minio:9000")
+    return File(url=f"s3://{bucket}/{key}")
+
+def create_kafka_lineage_entity(topic:str) -> File:
+    kafka_broker=os.getenv("KAFKA_BROKER","kafka:9092")
+    return File(url=f"kafka://{kafka_broker}/{topic}")
+
 
 #Wrapper functions to call both email and Slack notifications
 def notify_failure(context):
@@ -82,7 +93,23 @@ with DAG(
         Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/input", target="/samples/input", type="bind"),
         Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/output", target="/samples/output", type="bind"),
     ],
-    mount_tmp_dir=False
+    mount_tmp_dir=False,
+    inlets=[
+        create_s3_lineage_entity(DEFAULT_INPUT_BUCKET,DEFAULT_INPUT_KEY),
+    ],
+    outlets=[
+        create_s3_lineage_entity(DEFAULT_OUT_BUCKET,DEFAULT_OUT_KEY)
+    ],
+    doc_md="""
+    ### Email Validation Batch Task
+    
+    This task validates email addresses in the input data.
+    
+    **Inputs:**
+    - S3 Input: `{{ params.input_bucket }}/{{ params.input_key }}`
+    **Output:**
+    - S3 Output: `{{ params.out_bucket }}/{{ params.out_key }}`
+    """
 
     )
 
@@ -107,7 +134,13 @@ with DAG(
             Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/input", target="/samples/input", type="bind"),
             Mount(source="/Users/uverma/Documents/ETL Project/final-bulk-enrichment-v2/samples/output", target="/samples/output", type="bind"),
         ],
-        mount_tmp_dir=False
+        mount_tmp_dir=False,
+        inlets=[
+            create_kafka_lineage_entity(DEFAULT_INPUT_TOPIC)
+        ],
+        outlets=[
+            create_kafka_lineage_entity(DEFAULT_OUTPUT_TOPIC)
+        ]
     )
 
 
